@@ -52,6 +52,13 @@
             <version>${jakarta.persistence.version}</version>
         </dependency>
 
+        <!-- Validation API -->
+        <dependency>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>3.0.2</version>
+        </dependency>
+
         <!-- H2 Database for development/testing -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -72,7 +79,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+    
+        <!-- Spring Context (for @Role annotation) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.1.9.RELEASE</version>
+        </dependency>
+        </dependencies>
 
     <build>
         <plugins>
