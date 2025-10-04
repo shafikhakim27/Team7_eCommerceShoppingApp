@@ -12,7 +12,10 @@ public class Customer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerID;
+    private Long id;
+
+    private String userName;
+    private String userPw;
     
     @ManyToMany
     @JoinTable(
@@ -26,13 +29,29 @@ public class Customer {
     public Customer() {}
     
     // Getters and Setters
-    public Long getCustomerID() {
-        return customerID;
+    public Long getId() {
+        return id;
     }
     
-    public void setCustomerID(Long customerID) {
-        this.customerID = customerID;
-    }
+    public void setId(Long id) {
+		this.id = id;
+	}
+
+    public String getUserPw() {
+		return userPw;
+	}
+
+	public void setUserPw(String userPw) {
+		this.userPw = userPw;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
     
     public List<Product> getCustomerProducts() {
         return customerProducts;
