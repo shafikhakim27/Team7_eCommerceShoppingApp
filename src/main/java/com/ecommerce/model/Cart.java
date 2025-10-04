@@ -1,4 +1,4 @@
-package sg.edu.nus.caproject.model;
+package com.ecommerce.model;
 
 import java.util.ArrayList;
 import java.util.List;
