@@ -7,7 +7,7 @@ import jakarta.persistence.*;
  * Customer entity for the e-commerce application.
  */
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
     
     @Id
@@ -24,6 +24,9 @@ public class Customer {
         inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> customerProducts;
+
+	@OneToOne(mappedBy="customer")
+	private Cart cart;
     
     // Default constructor
     public Customer() {}
@@ -60,4 +63,12 @@ public class Customer {
     public void setCustomerProducts(List<Product> customerProducts) {
         this.customerProducts = customerProducts;
     }
+
+	public Cart getCart() {
+		return cart;
+	}
+	
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
 }
