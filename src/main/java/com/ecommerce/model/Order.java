@@ -1,6 +1,7 @@
 package com.ecommerce.model;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 /**
@@ -12,16 +13,16 @@ public class Order {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderID;
+    private Long OrderID;
 
-    private float totalAmount;
+    private double totalAmount;
 	private LocalDateTime orderDate;
 	
-	public float getTotalAmount() {
+	public double getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(float totalAmount) {
+	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
