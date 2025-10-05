@@ -106,7 +106,7 @@ public class Product {
 		this.brand = brand;
 	}
 
-    @OneToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     private List<CartItem> cartItems;
 
     public List<CartItem> getCartItems(){
@@ -117,7 +117,7 @@ public class Product {
 		this.cartItems = cartItems;
 	}
 
-	@OneToMany (mappedBy="products")
+	@OneToMany (mappedBy="product")
 	private List<OrderItem> orderItems;
 	
 	public List<OrderItem> getOrderItems() {
