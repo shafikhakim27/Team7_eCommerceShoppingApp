@@ -11,6 +11,13 @@ public class OrderItem {
 	private double unitPrice; //at the time of order
 
 	//constructor
+	public OrderItem(Order order, Product product, int quantity, double unitPrice) {
+		this.order= order;
+		this.product= product;
+		this.quantity= quantity;
+		this.unitPrice= unitPrice;
+	}
+	
 	OrderItem(){}
 	
 	@ManyToOne 
