@@ -9,6 +9,9 @@ public class OrderItem {
 	private long id;
 	private int quantity;
 	private double unitPrice; //at the time of order
+
+	//constructor
+	OrderItem(){}
 	
 	@ManyToOne 
 	@JoinColumn (name="order_id")
