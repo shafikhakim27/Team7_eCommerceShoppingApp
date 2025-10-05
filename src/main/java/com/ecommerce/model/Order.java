@@ -47,7 +47,7 @@ public class Order {
 	}
 
 	@OneToMany (mappedBy="orders", cascade=CascadeType.ALL)
-	private List<OrderItem> orderItems;
+	private List<OrderItem> orderItems = new ArrayList<>();
 
 	public List<OrderItem> getOrderItems() {
 		return orderItems;
