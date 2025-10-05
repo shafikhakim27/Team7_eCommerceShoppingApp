@@ -79,14 +79,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-    
-        <!-- Spring Context (for @Role annotation) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.1.9.RELEASE</version>
-        </dependency>
-        </dependencies>
+    </dependencies>
 
     <build>
         <plugins>

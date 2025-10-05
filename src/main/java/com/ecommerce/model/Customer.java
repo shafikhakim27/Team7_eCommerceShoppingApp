@@ -7,12 +7,15 @@ import jakarta.persistence.*;
  * Customer entity for the e-commerce application.
  */
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerID;
+    private Long id;
+
+    private String userName;
+    private String userPw;
     
     @ManyToMany
     @JoinTable(
@@ -21,18 +24,37 @@ public class Customer {
         inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> customerProducts;
+
+	@OneToOne(mappedBy="customer")
+	private Cart cart;
     
     // Default constructor
     public Customer() {}
     
     // Getters and Setters
-    public Long getCustomerID() {
-        return customerID;
+    public Long getId() {
+        return id;
     }
     
-    public void setCustomerID(Long customerID) {
-        this.customerID = customerID;
-    }
+    public void setId(Long id) {
+		this.id = id;
+	}
+
+    public String getUserPw() {
+		return userPw;
+	}
+
+	public void setUserPw(String userPw) {
+		this.userPw = userPw;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
     
     public List<Product> getCustomerProducts() {
         return customerProducts;
@@ -41,4 +63,12 @@ public class Customer {
     public void setCustomerProducts(List<Product> customerProducts) {
         this.customerProducts = customerProducts;
     }
+
+	public Cart getCart() {
+		return cart;
+	}
+	
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
 }

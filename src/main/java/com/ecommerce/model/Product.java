@@ -8,128 +8,129 @@ import jakarta.persistence.*;
  * Updated for Java 21 compatibility with modern features.
  */
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productID;
+    private Long id;
     
-    @Column(nullable = false)
-    private String productName;
+    @Column(nullable = false, length=50)
+    private String name;
     
     @Column(length = 1000)
-    private String productDescription;
+    private String description;
+
+    @Column (length = 20)
+    private String imageName;
     
-    @Column(nullable = false)
+    @Column(nullable = false, length=20)
     private String category;
     
     @Column(nullable = false)
-    private Double productPrice;
-    
-    private String productBrand;
-    
-    @ElementCollection
-    @CollectionTable(name = "product_reviews", 
-                    joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "review")
-    private List<String> reviews;
-    
-    @ElementCollection
-    @CollectionTable(name = "product_ratings", 
-                    joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "rating")
-    private List<Double> ratings;
+    private Double price;
+
+    @Column (length = 20)
+    private String brand;
+
+    // Constructor
+    public Product() {
+		super();
+	}
+	
+	public Product(String name, String description, String imageName, 
+			String category, double price, String brand) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.imageName = imageName;
+		this.category = category;
+		this.price = price;
+		this.brand = brand;
+	}
+
+    // Getters and setters
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+    @OneToMany(mappedBy = "products")
+    private List<CartItem> cartItems;
+
+    public List<CartItem> getCartItems(){
+		return cartItems;
+	}
+	
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
     
     @ManyToMany(mappedBy = "orderProducts")
     private List<Order> orders;
-    
-    @ManyToMany(mappedBy = "customerProducts")
-    private List<Customer> customers;
-    
-    // Default constructor
-    public Product() {}
-    
-    // Constructor with essential fields
-    public Product(String productName, String productDescription, String category, Double productPrice) {
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.category = category;
-        this.productPrice = productPrice;
-    }
-    
-    // Getters and Setters with improved naming
-    public Long getProductID() {
-        return productID;
-    }
-    
-    public void setProductID(Long productID) {
-        this.productID = productID;
-    }
-    
-    public String getProductName() {
-        return productName;
-    }
-    
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-    
-    public String getProductDescription() {
-        return productDescription;
-    }
-    
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
-    }
-    
-    public String getCategory() {
-        return category;
-    }
-    
-    public void setCategory(String category) {
-        this.category = category;
-    }
-    
-    public Double getProductPrice() {
-        return productPrice;
-    }
-    
-    public void setProductPrice(Double productPrice) {
-        this.productPrice = productPrice;
-    }
-    
-    public String getProductBrand() {
-        return productBrand;
-    }
-    
-    public void setProductBrand(String productBrand) {
-        this.productBrand = productBrand;
-    }
-    
-    public List<String> getReviews() {
-        return reviews;
-    }
-    
-    public void setReviews(List<String> reviews) {
-        this.reviews = reviews;
-    }
-    
-    public List<Double> getRatings() {
-        return ratings;
-    }
-    
-    public void setRatings(List<Double> ratings) {
-        this.ratings = ratings;
-    }
-    
-    public List<Order> getOrders() {
+
+     public List<Order> getOrders() {
         return orders;
     }
     
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    // KIV TO REMOVE FROM HERE
+    @ManyToMany(mappedBy = "customerProducts")
+    private List<Customer> customers;
     
     public List<Customer> getCustomers() {
         return customers;
@@ -138,6 +139,7 @@ public class Product {
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
     }
+    // TO HERE
     
     @Override
     public String toString() {
