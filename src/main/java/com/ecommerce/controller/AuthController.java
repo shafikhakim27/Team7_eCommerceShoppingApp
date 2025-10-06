@@ -30,7 +30,7 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public String processLogin(@RequestParam String usernameOrEmail, 
+    public String processLogin(@RequestParam String usernameOrEmail,
             @RequestParam String password,
             Model model, HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
