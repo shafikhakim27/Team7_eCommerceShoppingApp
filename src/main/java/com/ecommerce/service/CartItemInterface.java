@@ -1,4 +1,4 @@
-package sg.edu.nus.cart.interfacemethods;
+//package name here
 
 import java.util.List;
 
@@ -11,3 +11,4 @@ public interface CartItemInterface {
 	public boolean IsItemInCart(Long productId, Long cartId, Integer quantity);
 	public void clearCartItems();
 }
+
