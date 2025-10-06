@@ -106,7 +106,7 @@ public class Product {
 		this.brand = brand;
 	}
 
-    @OneToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     private List<CartItem> cartItems;
 
     public List<CartItem> getCartItems(){
@@ -116,17 +116,28 @@ public class Product {
 	public void setCartItems(List<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
-    
-    @ManyToMany(mappedBy = "orderProducts")
-    private List<Order> orders;
 
-     public List<Order> getOrders() {
-        return orders;
-    }
+	@OneToMany (mappedBy="product")
+	private List<OrderItem> orderItems;
+	
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
     
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
+    //@ManyToMany(mappedBy = "orderProducts")
+    //private List<Order> orders;
+
+    // public List<Order> getOrders() {
+    //    return orders;
+    //}
+    
+    //public void setOrders(List<Order> orders) {
+    //    this.orders = orders;
+    //}
 
     // KIV TO REMOVE FROM HERE
     @ManyToMany(mappedBy = "customerProducts")

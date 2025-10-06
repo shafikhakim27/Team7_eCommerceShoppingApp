@@ -46,21 +46,31 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
+	@OneToMany (mappedBy="orders", cascade=CascadeType.ALL)
+	private List<OrderItem> orderItems = new ArrayList<>();
 
-	@ManyToMany
-    @JoinTable(
-        name = "order_products",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> orderProducts;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	// @ManyToMany
+    // @JoinTable(
+    //    name = "order_products",
+    //    joinColumns = @JoinColumn(name = "order_id"),
+    //    inverseJoinColumns = @JoinColumn(name = "product_id"))
+    // private List<Product> orderProducts;
 	
-    public List<Product> getOrderProducts() {
-        return orderProducts;
-    }
+    // public List<Product> getOrderProducts() {
+    //    return orderProducts;
+    //}
     
-    public void setOrderProducts(List<Product> orderProducts) {
-        this.orderProducts = orderProducts;
-    }
+    // public void setOrderProducts(List<Product> orderProducts) {
+    //    this.orderProducts = orderProducts;
+    //}
 
 	@ManyToOne
 	@JoinColumn(name="customer_id")
