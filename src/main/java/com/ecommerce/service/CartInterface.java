@@ -1,4 +1,4 @@
-package sg.edu.nus.cart.interfacemethods;
+//package name here
 
 import sg.edu.nus.cart.model.Cart;
 
@@ -8,3 +8,4 @@ public interface CartInterface {
 	public boolean updateCart(Cart cart);
 	public void clearCart();
 }
+
