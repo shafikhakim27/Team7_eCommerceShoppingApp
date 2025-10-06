@@ -5,11 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.context.annotation.Role;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -32,14 +27,6 @@ public class User {
     @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false)
     private String password;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles = new ArrayList<>();
 
     // Default constructor
     public User() {}
@@ -75,14 +62,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
 }

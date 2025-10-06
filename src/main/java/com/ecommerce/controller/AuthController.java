@@ -1,15 +1,13 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.dto.LoginRequest;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserService;
 import com.ecommerce.service.SessionManager;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,22 +25,30 @@ public class AuthController {
     }
     
     @GetMapping("/login")
-    public String loginPage(Model model) {
-        model.addAttribute("loginRequest", new LoginRequest());
+    public String loginPage() {
         return "login";
     }
     
     @PostMapping("/login")
-    public String processLogin(@Valid LoginRequest loginRequest, BindingResult result, 
-                              Model model, HttpServletRequest request, 
-                              RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
+    public String processLogin(@RequestParam String usernameOrEmail, 
+            @RequestParam String password,
+            Model model, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        
+        // Simple validation
+        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()) {
+            model.addAttribute("error", "Username or email is required");
+            return "login";
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            model.addAttribute("error", "Password is required");
             return "login";
         }
         
         Optional<User> userOpt = userService.authenticateUser(
-            loginRequest.getUsernameOrEmail(), 
-            loginRequest.getPassword()
+            usernameOrEmail.trim(),
+            password
         );
         
         if (userOpt.isPresent()) {
@@ -57,18 +63,39 @@ public class AuthController {
     }
     
     @GetMapping("/register")
-    public String registerPage(Model model) {
-        model.addAttribute("user", new User());
+    public String registerPage() {
         return "register";
     }
     
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
+    public String registerUser(@RequestParam String username,
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model, RedirectAttributes redirectAttributes) {
+        
+        // Simple validation
+        if (username == null || username.trim().isEmpty()) {
+            model.addAttribute("error", "Username is required");
+            return "register";
+        }
+        
+        if (email == null || email.trim().isEmpty()) {
+            model.addAttribute("error", "Email is required");
+            return "register";
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            model.addAttribute("error", "Password is required");
             return "register";
         }
         
         try {
+            // Create User object from form parameters
+            User user = new User();
+            user.setUsername(username.trim());
+            user.setEmail(email.trim());
+            user.setPassword(password);
+            
             userService.registerUser(user);
             redirectAttributes.addFlashAttribute("success", "Registration successful! Please log in.");
             return "redirect:/login";
@@ -89,7 +116,7 @@ public class AuthController {
     public String dashboard(HttpServletRequest request, Model model) {
         User currentUser = sessionManager.getCurrentUser(request);
         if (currentUser == null) {
-            return "redirect:/login";
+        return "redirect:/login";
         }
         model.addAttribute("user", currentUser);
         return "dashboard";

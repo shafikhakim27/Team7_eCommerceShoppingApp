@@ -1,6 +1,7 @@
 package com.ecommerce.model;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
@@ -46,7 +47,7 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	@OneToMany (mappedBy="orders", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="order", cascade=CascadeType.ALL)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	public List<OrderItem> getOrderItems() {

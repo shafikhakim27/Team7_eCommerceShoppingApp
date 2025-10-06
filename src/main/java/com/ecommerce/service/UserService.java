@@ -11,18 +11,48 @@ import java.util.Optional;
 public class UserService {
     
     private final UserRepository userRepository;
-    private final PasswordService passwordService;
+    private final PasswordServiceInterface passwordService;
 
-    public UserService(UserRepository userRepository, PasswordService passwordService) {
+    public UserService(UserRepository userRepository, PasswordServiceInterface passwordService) {
         this.userRepository = userRepository;
         this.passwordService = passwordService;
     }
     
+    // Custom query methods (moved from repository)
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findAll().stream()
+            .filter(user -> user.getUsername().equals(username))
+            .findFirst();
+    }
+    
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findAll().stream()
+            .filter(user -> user.getEmail().equals(email))
+            .findFirst();
+    }
+    
+    public boolean existsByUsername(String username) {
+        return findByUsername(username).isPresent();
+    }
+    
+    public boolean existsByEmail(String email) {
+        return findByEmail(email).isPresent();
+    }
+    
+    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
+        // Check if it's an email (contains @) or username
+        if (usernameOrEmail.contains("@")) {
+            return findByEmail(usernameOrEmail);
+        } else {
+            return findByUsername(usernameOrEmail);
+        }
+    }
+    
     public User registerUser(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
         
@@ -45,10 +75,7 @@ public class UserService {
      * @return authenticated user if credentials are valid
      */
     public Optional<User> authenticateUser(String usernameOrEmail, String plainPassword) {
-        Optional<User> userOpt = userRepository.findByUsername(usernameOrEmail);
-        if (userOpt.isEmpty()) {
-            userOpt = userRepository.findByEmail(usernameOrEmail);
-        }
+        Optional<User> userOpt = findByUsernameOrEmail(usernameOrEmail);
         
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -60,27 +87,11 @@ public class UserService {
         return Optional.empty();
     }
     
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-    
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-    
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
     
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-    
     public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-    
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
     }
 }
