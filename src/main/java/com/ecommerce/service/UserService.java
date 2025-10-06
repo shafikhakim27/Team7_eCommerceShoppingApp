@@ -11,9 +11,11 @@ import java.util.Optional;
 public class UserService {
     
     private final UserRepository userRepository;
+    private final PasswordService passwordService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordService passwordService) {
         this.userRepository = userRepository;
+        this.passwordService = passwordService;
     }
     
     public User registerUser(User user) {
@@ -24,7 +26,38 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists");
         }
         
+        // Validate password strength
+        if (!passwordService.isValidPassword(user.getPassword())) {
+            throw new IllegalArgumentException(passwordService.getPasswordRequirements());
+        }
+        
+        // Encrypt password before saving
+        String encryptedPassword = passwordService.encryptPassword(user.getPassword());
+        user.setPassword(encryptedPassword);
+        
         return userRepository.save(user);
+    }
+    
+    /**
+     * Authenticates user with username/email and password
+     * @param usernameOrEmail username or email
+     * @param plainPassword plain text password
+     * @return authenticated user if credentials are valid
+     */
+    public Optional<User> authenticateUser(String usernameOrEmail, String plainPassword) {
+        Optional<User> userOpt = userRepository.findByUsername(usernameOrEmail);
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(usernameOrEmail);
+        }
+        
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (passwordService.verifyPassword(plainPassword, user.getPassword())) {
+                return Optional.of(user);
+            }
+        }
+        
+        return Optional.empty();
     }
     
     public Optional<User> findByUsername(String username) {

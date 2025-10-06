@@ -67,5 +67,9 @@ build/
 # VS Code
 .vscode/
 
+# Test applications (to avoid conflicts)
+test/login-test-app/
+**/login-test-*/
+
 # Spring Boot
 .DS_Store
