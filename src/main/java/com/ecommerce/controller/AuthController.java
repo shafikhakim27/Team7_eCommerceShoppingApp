@@ -15,111 +15,59 @@ import java.util.Optional;
 
 @Controller
 public class AuthController {
-    
+
     private final UserService userService;
     private final SessionManager sessionManager;
-    
+
     public AuthController(UserService userService, SessionManager sessionManager) {
         this.userService = userService;
         this.sessionManager = sessionManager;
-    }
-    
+}
+
     @GetMapping("/login")
-    public String loginPage() {
-        return "login";
+    public String showLoginPage() {
+        return "login"; // Return the login view
     }
-    
+
     @PostMapping("/login")
-    public String processLogin(@RequestParam String usernameOrEmail,
-            @RequestParam String password,
-            Model model, HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
-        
-        // Simple validation
-        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()) {
-            model.addAttribute("error", "Username or email is required");
-            return "login";
-        }
-        
-        if (password == null || password.trim().isEmpty()) {
-            model.addAttribute("error", "Password is required");
-            return "login";
-        }
-        
-        Optional<User> userOpt = userService.authenticateUser(
-            usernameOrEmail.trim(),
-            password
-        );
-        
+    public String handleLogin(@RequestParam String email, @RequestParam String password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        Optional<User> userOpt = userService.authenticate(email, password);
         if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            sessionManager.login(user, request);
-            redirectAttributes.addFlashAttribute("success", "Welcome back, " + user.getUsername() + "!");
-            return "redirect:/dashboard"; // Redirect to dashboard or home page
+            // Successful login
+            sessionManager.createSession(request, userOpt.get());
+            return "redirect:/dashboard"; // Redirect to a dashboard or home page
         } else {
-            model.addAttribute("error", "Invalid username/email or password");
-            return "login";
-        }
-    }
-    
-    @GetMapping("/register")
-    public String registerPage() {
-        return "register";
-    }
-    
-    @PostMapping("/register")
-    public String registerUser(@RequestParam String username,
-            @RequestParam String email,
-            @RequestParam String password,
-            Model model, RedirectAttributes redirectAttributes) {
-        
-        // Simple validation
-        if (username == null || username.trim().isEmpty()) {
-            model.addAttribute("error", "Username is required");
-            return "register";
-        }
-        
-        if (email == null || email.trim().isEmpty()) {
-            model.addAttribute("error", "Email is required");
-            return "register";
-        }
-        
-        if (password == null || password.trim().isEmpty()) {
-            model.addAttribute("error", "Password is required");
-            return "register";
-        }
-        
-        try {
-            // Create User object from form parameters
-            User user = new User();
-            user.setUsername(username.trim());
-            user.setEmail(email.trim());
-            user.setPassword(password);
-            
-            userService.registerUser(user);
-            redirectAttributes.addFlashAttribute("success", "Registration successful! Please log in.");
+            // Failed login
+            redirectAttributes.addFlashAttribute("error", "Invalid email or password.");
             return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            return "register";
         }
     }
-    // Additional methods for logout and session management can be added here
+
+    @GetMapping("/register")
+    public String showRegistrationPage() {
+        return "register"; // Return the registration view
+    }
+
+    @PostMapping("/register")
+    public String handleRegistration(@RequestParam String name, @RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
+        if (userService.emailExists(email)) {
+            redirectAttributes.addFlashAttribute("error", "Email already in use.");
+            return "redirect:/register";
+        }
+
+        User newUser = new User();
+        newUser.setName(name);
+        newUser.setEmail(email);
+        newUser.setPassword(password); // In a real app, ensure to hash the password
+
+        userService.saveUser(newUser);
+        redirectAttributes.addFlashAttribute("success", "Registration successful. Please log in.");
+        return "redirect:/login";
+    }
+
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        sessionManager.logout(request);
-        redirectAttributes.addFlashAttribute("success", "You have been logged out successfully");
-        return "redirect:/login";
+    public String handleLogout(HttpServletRequest request) {
+        sessionManager.invalidateSession(request);
+        return "redirect:/login?logout"; // Redirect to login page with logout message
     }
-    
-    @GetMapping("/dashboard")
-    public String dashboard(HttpServletRequest request, Model model) {
-        User currentUser = sessionManager.getCurrentUser(request);
-        if (currentUser == null) {
-        return "redirect:/login";
-        }
-        model.addAttribute("user", currentUser);
-        return "dashboard";
-    }
-    //
 }
