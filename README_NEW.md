@@ -7,7 +7,7 @@ This is a modern Java-based e-commerce shopping application built with **Java 21
 
 ### ✅ **Recently Completed**
 - **Java 21 LTS Upgrade**: Latest long-term support version
-- **Spring Boot 3.5.6**: Latest stable framework version
+- **Spring Boot 3.5.6**: Latest stable framework version  
 - **Clean Architecture Implementation**: Separated password/authentication logic
 - **Service Layer Optimization**: Simplified and streamlined service classes
 - **Repository Layer**: Clean data access with custom queries
@@ -138,7 +138,7 @@ Password: password
 
 ### **User Authentication Flow**
 1. **Registration**: Create account with encrypted password
-2. **Login**: Authenticate with username/email and password
+2. **Login**: Authenticate with username/email and password  
 3. **Session**: Maintain logged-in state
 4. **Logout**: Secure session termination
 
