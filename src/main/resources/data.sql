@@ -6,7 +6,7 @@
 
 /* In order of model, Cart, CartItem, Customer, Order, OrderItem, Product, User*/
 
-/* Category, ProductCategory, Review, Supplier, Inventory, Payment, Shipment, DeliveryAddress */
+/* Category, ProductCategory, Review, Supplier, Inventory, Payment, Shipment, DeliveryAddress, Index */
 
 
 -- Create table for carts
