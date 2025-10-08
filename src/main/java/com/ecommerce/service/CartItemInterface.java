@@ -1,8 +1,10 @@
 //package name here
+package com.ecommerce.service;
 
 import java.util.List;
 
-import sg.edu.nus.cart.model.CartItem;
+// import sg.edu.nus.cart.model.CartItem;
+import com.ecommerce.model.CartItem;
 
 //Goh Ching Tard
 public interface CartItemInterface {

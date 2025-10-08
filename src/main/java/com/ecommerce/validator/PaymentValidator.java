@@ -1,4 +1,5 @@
 //package name here
+package com.ecommerce.validator;
 
 import java.time.YearMonth;
 
@@ -6,7 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import sg.edu.nus.caproject.model.Payment;
+// import sg.edu.nus.caproject.model.Payment;
+// import com.ecommerce.model.Payment;
 
 @Component
 public class PaymentValidator implements Validator {

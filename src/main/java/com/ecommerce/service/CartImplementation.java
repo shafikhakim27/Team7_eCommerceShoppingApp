@@ -1,22 +1,30 @@
 //package name here
+package com.ecommerce.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import sg.edu.nus.cart.interfacemethods.CartInterface;
-import sg.edu.nus.cart.model.Cart;
-import sg.edu.nus.cart.model.Customer;
-import sg.edu.nus.cart.repository.CartRepository;
-import sg.edu.nus.cart.repository.CustomerRepository;
+// import sg.edu.nus.cart.interfacemethods.CartInterface;
+// import sg.edu.nus.cart.model.Cart;
+// import sg.edu.nus.cart.model.Customer;
+// import sg.edu.nus.cart.repository.CartRepository;
+// import sg.edu.nus.cart.repository.CustomerRepository;
+
+import com.ecommerce.service.CartInterface;
+import com.ecommerce.model.Cart;
+import com.ecommerce.model.Customer;
+import com.ecommerce.repository.CartRepository;
+import com.ecommerce.repository.CustomerRepository;
+
 
 //Goh Ching Tard
-@Service 
-@Transactional 
+@Service
+@Transactional
 public class CartImplementation implements CartInterface {
 
-	@Autowired 
-	CartRepository cartRepo; 
+	@Autowired
+	CartRepository cartRepo;
 	
 	@Autowired
 	CustomerRepository customerRepo;
@@ -28,9 +36,9 @@ public class CartImplementation implements CartInterface {
 	@Autowired
 	CustomerInterface customerService;
 	
-	@Override 
-	@Transactional 
-	public Cart findCart(Long customerId) { 
+	@Override
+	@Transactional
+	public Cart findCart(Long customerId) {
 		
 	    Cart customerCart = cartRepo.findByCustomer_Id(customerId).orElse(null);
 	        if (customerCart == null) {
@@ -43,9 +51,9 @@ public class CartImplementation implements CartInterface {
 	}
 
 	/*shir's code for findCart
-	@Override 
-	@Transactional 
-	public Cart findCart(Long customerId) { 
+	@Override
+	@Transactional
+	public Cart findCart(Long customerId) {
 		Optional<Cart> cartOpt = cartRepository.findByCustomerId(customerId);
 		if(cartOpt.isPresent()) {
 			return cartOpt.get();
@@ -59,24 +67,24 @@ public class CartImplementation implements CartInterface {
 		}
 		*/
 	
-	@Override 
-	@Transactional 
-	public boolean updateCart(Cart cart) { 
-		if (cartRepo.save(cart) != null) 
-			return true; 
-		else 
-			return false; 
+	@Override
+	@Transactional
+	public boolean updateCart(Cart cart) {
+		if (cartRepo.save(cart) != null)
+			return true;
+		else
+			return false;
 	}
 
-	@Override 
-	@Transactional 
+	@Override
+	@Transactional
 	public void clearCart() {
 		cartRepo.deleteAll();
 	}
 
 	/* shir's code
-	@Override 
-	@Transactional 
+	@Override
+	@Transactional
 	public void clearCart(Long customerId) {
 		Optional<Cart> cartOpt = cartRepository.findByCustomerId(customerId);
 		if (cartOpt.isPresent()) {

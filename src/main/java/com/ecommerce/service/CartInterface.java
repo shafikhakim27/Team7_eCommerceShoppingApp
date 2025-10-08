@@ -1,6 +1,8 @@
 //package name here
+package com.ecommerce.service;
 
-import sg.edu.nus.cart.model.Cart;
+// import sg.edu.nus.cart.model.Cart;
+import com.ecommerce.model.Cart;
 
 //Goh Ching Tard
 public interface CartInterface {

@@ -1,4 +1,5 @@
-package sg.edu.nus.caproject.service;
+// package sg.edu.nus.caproject.service;
+package com.ecommerce.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,13 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sg.edu.nus.caproject.model.Cart;
-import sg.edu.nus.caproject.model.CartItem;
-import sg.edu.nus.caproject.model.Customer;
-import sg.edu.nus.caproject.model.Order;
-import sg.edu.nus.caproject.model.OrderItem;
-import sg.edu.nus.caproject.repository.CartRepository;
-import sg.edu.nus.caproject.repository.OrderRepository;
+// import sg.edu.nus.caproject.model.Cart;
+// import sg.edu.nus.caproject.model.CartItem;
+// import sg.edu.nus.caproject.model.Customer;
+// import sg.edu.nus.caproject.model.Order;
+// import sg.edu.nus.caproject.model.OrderItem;
+// import sg.edu.nus.caproject.repository.CartRepository;
+// import sg.edu.nus.caproject.repository.OrderRepository;
+
+import com.ecommerce.model.Cart;
+import com.ecommerce.model.CartItem;
+import com.ecommerce.model.Customer;
+import com.ecommerce.model.Order;
+import com.ecommerce.model.OrderItem;
+import com.ecommerce.repository.CartRepository;
+import com.ecommerce.repository.OrderRepository;
 
 @Service
 @Transactional
