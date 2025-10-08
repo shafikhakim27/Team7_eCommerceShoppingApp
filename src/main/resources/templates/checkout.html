@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Payment Page</title>
+	<style> .error-message{color:red;}</style>
+</head>	
+
+<body style="font-family:arial;">
+	<div>
+		<h2>Card Payment</h2>
+	<form method="post" th:action="@{/checkout/checkout}" th:object="${paymentForm}">
+	<table style="font-size:16px;">
+		<!--note to self: form action tells browser where to send form data to when user clicks Submit-->
+		<tr>
+			<td>Total Amount Payable:</td>
+			<td><span th:text="${totalAmount}">Total Amount</span></td>	
+		</tr>	
+		<tr><td colspan="2"><br/></td></tr>
+		
+		<tr>
+			<td>
+				<label for="customerName">Name on Card:</label>
+			</td>	
+			<td>
+				<input type="text" th:field="*{name}"/>
+			</td>
+		</tr>	
+		<tr>
+			<td></td>
+			<td>
+				<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message">Name Error</span>
+			</td>	
+		</tr>
+		
+		<tr>	
+			<td>
+				<label for ="${ccNumber}">Card Number:</label>
+			</td>
+			<td>		
+				<input type="text" th:field="*{ccNumber}"/>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<span th:if="${#fields.hasErrors('ccNumber')}" th:errors="*{ccNumber}" class="error-message">Card Number Error</span>	
+			</td>
+		</tr>
+		
+		<tr>	
+			<td>
+				<label for ="expiryDate">Expiry Date<br/>(MM-YYYY):</label>
+			</td>
+			<td>		
+				<input type="text" th:field="*{expiryDate}" placeholder="MM-YYYY"/>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<span th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}" class="error-message">Expiry Date Error</span>	
+				
+			</td>	
+		</tr>	
+		
+		<tr>
+			<td>
+				<label for ="CVV">CVV:</label>
+			</td>
+			<td>		
+				<input type="text" th:field="*{CVV}"/>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<span th:if="${#fields.hasErrors('CVV')}" th:errors="*{CVV}" class="error-message">CVV Error</span>
+			</td>	
+		</tr>	
+		
+		<div>
+			<p th:if="${paymentError}" th:text="${paymentError}" class="error-message"></p>
+		</div>	
+		
+		<tr>
+			<td>
+				<input type="submit" value="Make Payment"/>
+			</td>
+		</tr>
+	</table>		
+	</form>
+	</div>
+</body>
+
+</html>

@@ -3,7 +3,7 @@ package com.ecommerce.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-// import sg.edu.nus.cart.model.Cart;\
+// import sg.edu.nus.cart.model.Cart;
 import com.ecommerce.model.Cart;
 
 //Goh Ching Tard

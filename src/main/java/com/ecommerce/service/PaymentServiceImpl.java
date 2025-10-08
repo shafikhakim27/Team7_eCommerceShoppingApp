@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 // import sg.edu.nus.caproject.model.Payment;
-// import com.ecommerce.model.Payment;
+import com.ecommerce.model.Payment;
 
 @Service
 @Transactional

@@ -1,0 +1,144 @@
+<!-- george's code -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: whitesmoke;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: royalblue;
+            color: white;
+            text-transform: uppercase;
+        }
+        .item-image {
+            width: 150px; /* Standard size for images */
+            height: 150px;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            display: block; /* Removes any extra space below the image */
+            margin: 0 auto; /* Center the image in the cell */
+            border-radius: 5px;
+        }
+		.item-title {
+		    font-weight: bold;
+		    font-size: 1.3em;
+		    color: black;
+		    margin-top: 10px;
+		}
+		.item-description {
+		    color: black;
+		    font-weight: normal;
+		    font-size: 1.1em;
+		    margin-top: 10px;
+		    display: block;
+		}
+		.price {
+		    color: black;
+		    font-weight: normal;
+		    font-size: 0.9em;
+		    margin-top: 10px;
+		    display: block;
+		}
+		.container {
+		  text-align: right;
+		}
+        .cart-button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        .cart-button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+	<table style="background-color: whitesmoke; color: white; padding: 0px;
+					border: none; box-shadow: none;">
+		<tr>
+			<td style="border: none;"></td>
+			<td style="border: none;"></td>
+			<td style="border: none;"><h1> Your Cart </h1></td>		
+			<td style="border: none; text-align: right;">
+				<form th:action="@{/checkout/payment-details}" method="get">
+				<!-- <input type="hidden" name="productId" th:value="${product.id}" />   -->
+					<div class="container">			
+						<button class="cart-button" type="submit">Checkout</button>
+					</div>
+				</form>
+			</td>	
+		</tr>
+	</table>
+
+	<h3 style="text-align: center;"th:if="${#lists.isEmpty(cartitems)}">No products found.</h3> 
+ 
+	<table th:if="${not #lists.isEmpty(cartitems)}"> 
+        <thead>
+            <tr>
+                <th>Product Category</th>
+                <th>Product Description</th>
+				<th>Quantity</th>
+				<th>Price</th>
+             </tr>
+        </thead>
+        <tbody>
+			<div th:each="cartitem : ${cartitems}">
+			<tr>
+                <td>
+                    <img src="https://via.placeholder.com/150x150?text=Laptop" alt="Stylish Laptop" class="product-image">
+                </td>
+                <td>
+                    <span class = "item-title" th:text="${cartitem.product.name}">Product Name</span>
+                    <span class = "item-description" th:text="${cartitem.product.description}">Product Description</span>
+                </td>
+				<td>
+				    <span class = "item-description" th:text="${cartitem.quantity}">Product Quantity</span>
+				</td>
+				<td>    
+					<span class = "price" th:text=
+					"'$'+${#numbers.formatDecimal(cartitem.product.price*cartitem.quantity, 0, 'COMMA', 2, 'POINT')}">Price
+					</span>
+				</td>	
+            </tr>
+			</div>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><p style="text-align: right;">Total:</p></td>
+				<td>
+					<span class = "price" th:text=
+						"'$'+${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 2, 'POINT')}">Total Amount
+					</span>
+				</td>
+			</tr>
+	    </tbody>
+    </table>	
+</body>
+</html>	
