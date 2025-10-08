@@ -10,5 +10,9 @@ public interface CartItemInterface {
 	public List<CartItem> GetProductsInCart(Long customerId);
 	public boolean IsItemInCart(Long productId, Long cartId, Integer quantity);
 	public void clearCartItems();
+
+	//added by shir
+	double calculateTotal(List<CartItem> cartItems);
 }
+
 
