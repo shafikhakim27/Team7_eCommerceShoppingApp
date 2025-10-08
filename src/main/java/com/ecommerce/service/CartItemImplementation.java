@@ -50,4 +50,17 @@ public class CartItemImplementation implements CartItemInterface {
 	public void clearCartItems() {
 		cartitemRepo.deleteAll();
 	}
+
+	//below are shirley's codes
+	
+	@Override
+	@Transactional
+	public double calculateTotal(List<CartItem> cartItems) {
+		double total = 0.0;
+		for (CartItem item: cartItems) {
+			total += item.getQuantity()*item.getProduct().getPrice();
+		}
+		return total;
+	}
+	
 }
