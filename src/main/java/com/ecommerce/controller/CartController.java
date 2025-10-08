@@ -33,7 +33,12 @@ public class CartController {
 	@GetMapping(value = "/viewcart") 
 	public String viewCart(Model model) { 
 
-		model.addAttribute("cartitems", cartitemService.GetProductsInCart(customerId)); 
+		List<CartItem> cartItems = cartItemService.getProductsInCart(customerId);
+		double totalAmount = cartItemService.calculateTotal(cartItems);
+		model.addAttribute("cartitems", cartItems);
+		model.addAttribute("totalAmount", totalAmount);
+
+		// model.addAttribute("cartitems", cartitemService.GetProductsInCart(customerId)); 
 
 		return "CartProducts"; 
 	} 
