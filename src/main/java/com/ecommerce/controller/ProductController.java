@@ -34,6 +34,19 @@ public class ProductController {
 		cartService.clearCart();
 		return "redirect:/products/list";
 	}
+
+	/* shir's version
+	@GetMapping("/products") 	
+	public String clearAllCartItems(Model model, HttpSession session) {
+		Long customerId=(Long) session.getAttribute("customerId");
+		
+		if(customerId==null) {
+			return "redirect:/login";
+		}
+		cartService.clearCart(customerId);
+		return "redirect:/products/list";
+	}
+	*/
 	
 	@GetMapping("/products/list") 	
 	public String showProductPage(Model model) { 
