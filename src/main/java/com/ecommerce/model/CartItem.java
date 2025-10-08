@@ -1,11 +1,6 @@
 package com.ecommerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class CartItem {
@@ -16,8 +11,10 @@ public class CartItem {
 	
 	private int quantity;
 	
-	@ManyToOne
-	@JoinColumn(name="cart_id") //foreign key in Cart table
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	//only to fetch CartItem and not to load Cart from database immediately whenever 1 cart item is loaded
+	@JoinColumn(name="cart_id", nullable=false) //foreign key in Cart table
+	//nullable = false ensures that cart_id column is NOT NULL
 	private Cart cart;
 	
 	@ManyToOne
