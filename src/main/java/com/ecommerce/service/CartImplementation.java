@@ -20,6 +20,13 @@ public class CartImplementation implements CartInterface {
 	
 	@Autowired
 	CustomerRepository customerRepo;
+
+	//below 2 autowired added by shir
+	@Autowired
+	CartItemRepository cartItemRepository;
+	
+	@Autowired
+	CustomerInterface customerService;
 	
 	@Override 
 	@Transactional 
@@ -34,6 +41,23 @@ public class CartImplementation implements CartInterface {
 	        }
 	        return customerCart;
 	}
+
+	/*shir's code for findCart
+	@Override 
+	@Transactional 
+	public Cart findCart(Long customerId) { 
+		Optional<Cart> cartOpt = cartRepository.findByCustomerId(customerId);
+		if(cartOpt.isPresent()) {
+			return cartOpt.get();
+		} else {
+			Cart newCart = new Cart();
+			Customer customer = customerService.getCustomerById(customerId).orElse(null);
+			newCart.setCustomer(customer);
+			
+			Cart savedCart = cartRepository.save(newCart); // to persist cart! 
+			return savedCart;
+		}
+		*/
 	
 	@Override 
 	@Transactional 
@@ -49,5 +73,20 @@ public class CartImplementation implements CartInterface {
 	public void clearCart() {
 		cartRepo.deleteAll();
 	}
+
+	/* shir's code
+	@Override 
+	@Transactional 
+	public void clearCart(Long customerId) {
+		Optional<Cart> cartOpt = cartRepository.findByCustomerId(customerId);
+		if (cartOpt.isPresent()) {
+			Cart cart = cartOpt.get();
+			// Long cartId = cart.getId();
+			
+			cart.getCartItems().clear();
+			cartRepository.save(cart); // "update status of cart as empty"
+		}
+	}
+	*/
 	
 }
