@@ -311,6 +311,9 @@ This project is part of Team7's coursework and is intended for educational purpo
 - **[Thymeleaf Documentation](https://www.thymeleaf.org/documentation.html)**
 - **[Maven Documentation](https://maven.apache.org/guides/)**
 
+<!-- Shafik Extra Notes -->
+
+<!-- Basic Step-->
 <!-- // Implement MySQL, create table users for all models. (7)
 // CREATE TABLE users (
 //     userID BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -329,3 +332,25 @@ This project is part of Team7's coursework and is intended for educational purpo
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL -->
+
+<!-- Consider if password can store in database VS stored securely where it cannot be accessed (hacked) -->
+
+<!-- SHA256 or just store in db -->
+<!-- Login Functions  -->
+<!-- !-- 1) Register User -->
+<!-- 2) Login/Logout -->
+
+<!-- Update User Detail
+If user forget password
+If user forget username
+
+If user forget registered email
+
+If user want to change username
+If user want to delete browsing history -->
+
+<!-- Considering React.js for interactive login page with elements -->
+<!-- Button to forget password? Autofill?? -->
+
+
+hihi
