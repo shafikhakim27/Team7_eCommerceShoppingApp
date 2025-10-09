@@ -1,0 +1,40 @@
+package ca.purchaseHistory.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import ca.purchaseHistory.service.PurchaseHistoryService;
+
+@Controller
+@RequestMapping("/PurchaseHistory")
+public class PurchaseHistoryController {
+
+    @Autowired
+    private PurchaseHistoryService purchaseHistoryService;
+
+    //overview purchase history
+    @GetMapping("/{customerID}")
+    public String viewPurchaseHistory(@PathVariable Long id, Model model) {
+        model.addAttribute("orders", purchaseHistoryService.getOrdersByCustomer(id));
+        return "PurchaseHistory"; // 对应 templates/PurchaseHistory.html
+    }
+
+    //search purchased product by name
+    @GetMapping("/search")
+    public String searchProduct(@RequestParam String keyword, Model model) {
+        model.addAttribute("results", purchaseHistoryService.searchProduct(keyword));
+        return "searchProductResult";
+    }
+
+    //view details
+    @GetMapping("/details/{OrderId}")
+    public String viewOrderDetails(@PathVariable Long id, Model model) {
+        model.addAttribute("details", purchaseHistoryService.getOrderDetails(id));
+        return "ViewDetails";
+    }
+}
