@@ -311,7 +311,7 @@ This project is part of Team7's coursework and is intended for educational purpo
 - **[Thymeleaf Documentation](https://www.thymeleaf.org/documentation.html)**
 - **[Maven Documentation](https://maven.apache.org/guides/)**
 
-// Implement MySQL, create table users for all models. (7)
+<!-- // Implement MySQL, create table users for all models. (7)
 // CREATE TABLE users (
 //     userID BIGINT AUTO_INCREMENT PRIMARY KEY,
 //     username VARCHAR(50) UNIQUE NOT NULL,
@@ -324,3 +324,8 @@ This project is part of Team7's coursework and is intended for educational purpo
 // Use Express.js framework to create server and define routes.
 // ensure secure communication with HTTPS and proper authentication mechanisms.
 // ensure port 8080 is open and accessible for incoming requests.
+// create table users (
+    userID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL -->
