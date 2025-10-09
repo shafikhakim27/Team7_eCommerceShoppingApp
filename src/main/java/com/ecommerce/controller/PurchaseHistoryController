@@ -21,7 +21,7 @@ public class PurchaseHistoryController {
     @GetMapping("/{customerID}")
     public String viewPurchaseHistory(@PathVariable Long id, Model model) {
         model.addAttribute("orders", purchaseHistoryService.getOrdersByCustomer(id));
-        return "PurchaseHistory"; // 对应 templates/PurchaseHistory.html
+        return "PurchaseHistory"; //  templates/PurchaseHistory.html
     }
 
     //search purchased product by name
