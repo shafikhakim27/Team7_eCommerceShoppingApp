@@ -1,0 +1,158 @@
+<!--done by george-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: whitesmoke;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+        }
+		header-table {
+		    width: 80%;
+		    margin: 20px auto;
+		    border: none;
+		    background-color: white;
+		}
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: whitesmoke;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: royalblue;
+            color: white;
+            text-transform: uppercase;
+        }
+        .product-image {
+            width: 150px; /* Standard size for images */
+            height: 150px;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            display: block; /* Removes any extra space below the image */
+            margin: 0 auto; /* Center the image in the cell */
+            border-radius: 5px;
+        }
+        .product-title {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: black;
+            margin-top: 10px;
+        }
+		.product-description {
+		    color: black;
+		    font-weight: normal;
+		    font-size: 1.1em;
+		    margin-top: 10px;
+		    display: block;
+		}
+        .price {
+            color: black;
+            font-weight: normal;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: block;
+        }
+		.container {
+		  text-align: right;
+		}
+		.cart-image {
+			background-color: whitesmoke;
+			width: 50px; 
+			height: 50px;
+			background-image: url('/ShoppingCart.png');
+			background-size: cover;
+			border: none;
+			cursor: pointer;
+			float: right;
+			vertical-align: top;
+		}
+        .cart-button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+			text-align: left;
+        }
+        .cart-button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+	<table style="background-color: whitesmoke; color: white; padding: 0px;
+					border: none; box-shadow: none;">
+		<tr>
+			<td style="border: none;"></td>
+			<td style="border: none;"><h1> One-stop Gadget Store </h1></td>
+			<td style="border: none; text-align: right;">
+				<div>
+					<p style="color: black; vertical-align: bottom;
+					padding: 0px; text-align: right; background-color:whitesmoke">
+					<span th:text="${cartItemsQuantity}"></span></p>
+					<form th:action="@{/viewcart}" method="get">
+					<button class ="cart-image"></button>
+				</div>	
+				</form>
+			</td>	
+		</tr>
+	</table>
+		
+	<h3 style="text-align: center;" th:if="${#lists.isEmpty(products)}">No products found.</h3> 
+ 
+	<table th:if="${not #lists.isEmpty(products)}"> 
+        <thead>
+            <tr>
+                <th>Product Category</th>
+                <th>Product Description</th>
+				<th>Product Quantity</th>
+             </tr>
+        </thead>
+        <tbody>
+			<div th:each="product : ${products}">
+			<tr>
+                <td>
+                    <img src="https://via.placeholder.com/150x150?text=Laptop" alt="Stylish Laptop" class="product-image">
+                </td>
+                <td>
+                    <span class = "product-title" th:text="${product.name}">Product Name</span>
+                    <span class = "product-description" th:text="${product.description}">Product Description</span>
+                    <span class = "price" th:text="'$'+${product.price}">Price</span>
+				</td>
+				
+				<td>
+					<form th:action="@{/addtocart}" method="get">	
+						<label for="dropdown">Quantity:</label>
+						<select name ="quantity" id = "quantity">
+						    <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}">
+						    </option>
+						</select>
+						<input type="hidden" name="productId" th:value="${product.id}" />
+						<button class="cart-button" type="submit">Add to Cart</button>
+					</form>
+				</td>
+			</tr>
+			</div>
+	    </tbody>
+    </table>
+
+</body>
+</html>	

@@ -139,7 +139,7 @@ public class Product {
     //    this.orders = orders;
     //}
 
-    // KIV TO REMOVE FROM HERE
+    /*
     @ManyToMany(mappedBy = "customerProducts")
     private List<Customer> customers;
     
@@ -150,7 +150,7 @@ public class Product {
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
     }
-    // TO HERE
+    */
     
     @Override
     public String toString() {

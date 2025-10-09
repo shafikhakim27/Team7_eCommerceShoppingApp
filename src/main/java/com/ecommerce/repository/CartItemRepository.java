@@ -1,5 +1,5 @@
 //package name here
-
+package com.ecommerce.repository;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import sg.edu.nus.cart.model.CartItem;
+// import sg.edu.nus.cart.model.CartItem;
+import com.ecommerce.model.CartItem;
 
 //Goh Ching Tard
 public interface CartItemRepository extends JpaRepository<CartItem, Long> { 

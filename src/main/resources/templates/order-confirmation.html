@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Order Confirmation</title>
+	<style>
+		.button {
+			background-color: cornflowerblue;
+		    color: white;
+		    padding: 8px 15px;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    margin-top: 10px;
+		    text-transform: uppercase;
+		}
+		.button:hover {
+		    background-color: darkblue;
+		}
+	</style>
+</head>
+	
+<body>
+	<h1>Order successful!</h1>
+	<div>
+		<a th:href="@{/order/view}" class="button">View Order</a>
+		<a th:href="@{/products/list}" class="button">Back To Home Page</a>
+	</div>
+			
+</body>
+
+</html>

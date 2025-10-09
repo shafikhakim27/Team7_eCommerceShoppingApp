@@ -1,8 +1,10 @@
 //package name here
+package com.ecommerce.service;
 
 import java.util.List;
 
-import sg.edu.nus.cart.model.CartItem;
+// import sg.edu.nus.cart.model.CartItem;
+import com.ecommerce.model.CartItem;
 
 //Goh Ching Tard
 public interface CartItemInterface {
@@ -10,5 +12,9 @@ public interface CartItemInterface {
 	public List<CartItem> GetProductsInCart(Long customerId);
 	public boolean IsItemInCart(Long productId, Long cartId, Integer quantity);
 	public void clearCartItems();
+
+	//added by shir
+	double calculateTotal(List<CartItem> cartItems);
 }
+
 
