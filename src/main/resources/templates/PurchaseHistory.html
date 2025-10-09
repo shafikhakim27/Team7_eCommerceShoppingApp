@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Purchase History</title>
+</head>
+
+<body>
+	<!--Header-->
+	<header id="header">
+		<h1><a herf="/">HOME</a>&nbsp;>&nbsp;Purchase History</h1>
+	</header>
+	<hr>
+	
+	<!--Search purchased products-->
+	<form action="#" th:action="@{/purchaseHistory/product/searching}" method="GET">
+		Search ordered product:<input type="text" name="keyword" placeholder="Enter product name">
+		<input type="submit" value="search">
+		<input type="reset">
+	</form>
+	
+	<!--Purchase History Overview-->
+	<br>
+	<table style="width:95%; margin-left: auto; margin-right: auto; border: slategrey;">
+		<thead>
+			<tr>
+				<th>Order Date</th>
+				<th>Order ID</th>
+				<th>Total Amount</th>
+				<th>More</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="purchase:${purchases}">
+				<td th:text="${purchase.orderDate}"></td>
+	            <td th:text="${purchase.orderID}"></td>
+	            <td th:text="${purchase.totalAmount}"></td>
+	            <td><a href="@{'/purchase-history/details/' + ${order.orderID}}" target="_blank">View details</a></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	
+</body>
+</html>
