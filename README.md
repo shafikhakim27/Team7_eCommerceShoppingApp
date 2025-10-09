@@ -1,30 +1,30 @@
 # Team7 eCommerce Shopping App
 
 ## Overview
-This is a modern Java-based e-commerce shopping application built with **Java 21** and **Spring Boot 3.5.6**, featuring a clean architecture with separated concerns for user management, authentication, and business logic.
+This is a modern Java-based e-commerce shopping application built with **Java 21** and **Spring Boot 3.5.6**, featuring a streamlined architecture optimized for development and rapid prototyping.
 
 ## 🎯 **Current Project Status**
 
 ### ✅ **Recently Completed**
 - **Java 21 LTS Upgrade**: Latest long-term support version
-- **Spring Boot 3.5.6**: Latest stable framework version
-- **Clean Architecture Implementation**: Separated password/authentication logic
-- **Service Layer Optimization**: Simplified and streamlined service classes
-- **Repository Layer**: Clean data access with custom queries
-- **Modern Security**: SHA-256 password hashing with proper verification
+- **Spring Boot 3.5.6**: Latest stable framework version  
+- **Simplified Authentication System**: Development-focused user management
+- **Enhanced SessionManager**: Comprehensive cart, checkout, and browse history support
+- **Streamlined User Model**: Reduced password requirements for easier development
+- **Clean Architecture**: Moved complex login features to `target/old_login/` for future production use
 
 ### 🏗️ **Current Architecture**
 
 ```
-📦 Clean Service Architecture
-┌─────────────────┐    ┌──────────────────┐    ┌────────────────┐
-│   UserService   │    │PasswordService   │    │ SessionManager │
-│ (User CRUD)     │◄───┤ (Security +      │    │ (Session Mgmt) │
-│ - Find users    │    │  Authentication) │    │ - Login/logout │
-│ - Check exists  │    │ - Validate       │    │ - Current user │
-│ - Save/register │    │ - Encrypt        │    │ - Status check │
-│                 │    │ - Authenticate   │    │                │
-└─────────────────┘    └──────────────────┘    └────────────────┘
+📦 Simplified Development Architecture
+┌─────────────────┐    ┌────────────────┐    ┌────────────────────┐
+│   UserService   │    │ UserController │    │  SessionManager    │
+│ (Simplified)    │◄───┤ (REST API)     │    │ (Enhanced)         │
+│ - Find users    │    │ - Registration │    │ - Login/logout     │
+│ - 3+ char pwd   │    │ - Login        │    │ - Cart management  │
+│ - Basic auth    │    │ - Password chg │    │ - Checkout data    │
+│ - Email unique  │    │ - User mgmt    │    │ - Browse history   │
+└─────────────────┘    └────────────────┘    └────────────────────┘
 ```
 
 ## 📁 **Current Project Structure**
@@ -34,35 +34,33 @@ This is a modern Java-based e-commerce shopping application built with **Java 21
 src/main/java/com/ecommerce/
 ├── ECommerceApplication.java          # 🚀 Spring Boot main class
 ├── controller/
-│   ├── AuthController.java            # 🔐 Authentication endpoints (/auth/*)
-│   ├── CartController.java            # 🛒 Shopping cart management
-│   └── ProductController.java         # 📦 Product catalog operations
+│   ├── UserController.java             # 🔐 Simplified REST authentication (/api/users/*)
+│   ├── CartController.java             # 🛒 Shopping cart management
+│   └── ProductController.java          # 📦 Product catalog operations
 ├── model/
-│   ├── User.java                      # 👤 User entity (JPA with validation)
-│   ├── Product.java                   # 📦 Product entity
-│   ├── Order.java                     # 📋 Order entity
-│   ├── OrderItem.java                 # 📝 Order line items
-│   ├── Customer.java                  # 👥 Customer entity
-│   ├── Cart.java                      # 🛒 Shopping cart entity
-│   └── CartItem.java                  # 🛍️ Cart item entity
+│   ├── User.java                       # 👤 User entity (simplified validation - 3+ char pwd)
+│   ├── Product.java                    # 📦 Product entity
+│   ├── Order.java                      # 📋 Order entity
+│   ├── OrderItem.java                  # 📝 Order line items
+│   ├── Customer.java                   # 👥 Customer entity
+│   ├── Cart.java                       # 🛒 Shopping cart entity
+│   └── CartItem.java                   # 🛍️ Cart item entity
 ├── repository/
-│   ├── UserRepository.java            # 💾 User data access (6 methods)
-│   ├── ProductRepository.java         # 📦 Product data access
-│   ├── CartRepository.java            # 🛒 Cart data access
-│   ├── CartItemRepository.java        # 🛍️ Cart item data access
-│   └── CustomerRepository.java        # 👥 Customer data access
+│   ├── UserRepository.java             # 💾 User data access (6 methods)
+│   ├── ProductRepository.java          # 📦 Product data access
+│   ├── CartRepository.java             # 🛒 Cart data access
+│   ├── CartItemRepository.java         # 🛍️ Cart item data access
+│   └── CustomerRepository.java         # 👥 Customer data access
 └── service/
-    ├── UserService.java               # 👤 User business logic (simplified)
-    ├── UserServiceInterface.java      # 📋 User service contract (7 methods)
-    ├── PasswordServiceImpl.java       # 🔐 Password operations + authentication
-    ├── PasswordServiceInterface.java  # 📋 Password service contract (clean docs)
-    ├── SessionManager.java            # 🔄 Session management (4 methods)
-    ├── ProductImplementation.java     # 📦 Product business logic
-    ├── ProductInterface.java          # 📋 Product service contract
-    ├── CartImplementation.java        # 🛒 Cart business logic
-    ├── CartInterface.java             # 📋 Cart service contract
-    ├── CartItemImplementation.java    # 🛍️ Cart item business logic
-    └── CartItemInterface.java         # 📋 Cart item service contract
+    ├── UserService.java                # 👤 Simplified user logic (3+ char pwd, plain text)
+    ├── UserServiceInterface.java       # 📋 User service contract (7 methods)
+    ├── SessionManager.java             # 🔄 Enhanced session mgmt (20+ methods)
+    ├── ProductImplementation.java      # 📦 Product business logic
+    ├── ProductInterface.java           # 📋 Product service contract
+    ├── CartImplementation.java         # 🛒 Cart business logic
+    ├── CartInterface.java              # 📋 Cart service contract
+    ├── CartItemImplementation.java     # 🛍️ Cart item business logic
+    └── CartItemInterface.java          # 📋 Cart item service contract
 ```
 
 ### **Resources Structure**
@@ -70,10 +68,21 @@ src/main/java/com/ecommerce/
 src/main/resources/
 ├── application.properties             # ⚙️ Application configuration
 ├── data.sql                          # 📊 Sample data script
-└── templates/                         # 🎨 Thymeleaf HTML templates
-    ├── login.html                     # 🔐 Login page (styled)
-    ├── register.html                  # 📝 Registration page (styled)
-    └── dashboard.html                 # 📊 User dashboard (styled)
+└── templates/                         # 🎨 Thymeleaf HTML templates (legacy)
+    ├── login.html                     # 🔐 Login page (moved to old_login)
+    ├── register.html                  # 📝 Registration page (moved to old_login)
+    └── dashboard.html                 # 📊 User dashboard
+
+target/old_login/                      # 📁 Previous complex login system (archived)
+├── service/
+│   ├── PasswordServiceInterface.java  # 🔐 Complex password validation
+│   ├── PasswordServiceImpl.java       # 🔐 SHA-256 hashing + validation
+│   └── SessionManager.java            # 🔄 Basic session management
+├── controller/
+│   └── AuthController.java            # 🎨 MVC-based authentication
+├── test/
+│   └── LoginTest.java                  # 🧪 Comprehensive login tests (11 tests)
+└── README.md                          # 📚 Documentation of moved features
 ```
 
 ## 🚀 **Quick Start**
@@ -92,8 +101,28 @@ cd Team7_eCommerceShoppingApp
 mvn clean spring-boot:run
 
 # Access the application
-# Main application: http://localhost:8080
+# REST API endpoints: http://localhost:8080/api/users/*
 # H2 Database console: http://localhost:8080/h2-console
+```
+
+### **API Endpoints (Current)**
+```bash
+# User Management (REST API)
+POST /api/users/register        # Register new user
+POST /api/users/login           # Login user
+GET  /api/users/{id}            # Get user by ID
+GET  /api/users/all            # Get all users (dev only)
+PUT  /api/users/{id}/password   # Change password
+
+# Example Registration
+curl -X POST http://localhost:8080/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"testuser","email":"test@example.com","password":"123"}'
+
+# Example Login
+curl -X POST http://localhost:8080/api/users/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"123"}'
 ```
 
 ### **Database Configuration**
@@ -121,26 +150,69 @@ Password: password
 ### **Database & Security**
 - **H2 Database** (Development/Testing)
 - **MySQL** (Production ready)
-- **SHA-256** (Password hashing)
-- **Session-based** authentication
+- **Plain Text Passwords** (Development phase - simplified)
+- **Session-based** authentication with cart/checkout support
 
 ### **Build & Testing**
 - **Maven** (Build tool)
 - **JUnit 5** (Testing framework)
 
-## 🔐 **Authentication & Security Features**
+## 🔐 **Authentication & Session Features**
 
-### **Password Management**
-- **SHA-256 Hashing**: Secure password encryption
-- **Password Validation**: 8+ chars, uppercase, lowercase, digit, special char
-- **Session Management**: Secure user sessions
-- **Clean Architecture**: Separated password logic from user logic
+### **Simplified Development Authentication**
+- **Minimal Password Requirements**: 3+ characters (easy testing)
+- **Plain Text Storage**: No encryption during development phase
+- **REST API**: JSON-based login/registration endpoints
+- **Session Management**: Enhanced with cart and eCommerce features
 
-### **User Authentication Flow**
-1. **Registration**: Create account with encrypted password
-2. **Login**: Authenticate with username/email and password
-3. **Session**: Maintain logged-in state
-4. **Logout**: Secure session termination
+### **Enhanced SessionManager Capabilities**
+```java
+// Authentication
+sessionManager.login(user, request);
+sessionManager.logout(request);
+boolean isLoggedIn = sessionManager.isLoggedIn(request);
+
+// Shopping Cart Management
+sessionManager.addToCart(request, productId, "Product Name", 29.99, 2);
+sessionManager.updateCartItemQuantity(request, productId, 5);
+Double total = sessionManager.getCartTotal(request);
+Integer itemCount = sessionManager.getCartItemCount(request);
+
+// Checkout Process
+sessionManager.saveCheckoutData(request, checkoutDetails);
+Map<String, Object> checkoutData = sessionManager.getCheckoutData(request);
+
+// Browse History
+sessionManager.addToBrowseHistory(request, productId, "Product Name");
+List<Map<String, Object>> history = sessionManager.getBrowseHistory(request);
+
+// User Preferences
+sessionManager.saveUserPreference(request, "favoriteCategory", "Electronics");
+```
+
+### **Development-Focused User Flow**
+1. **Registration**: Simple 3+ character password requirement
+2. **Login**: REST API with JSON response
+3. **Session**: Automatic cart initialization and activity tracking
+4. **Cart Operations**: Full session-based cart management
+5. **Checkout**: Session-stored checkout data
+6. **Browse History**: Automatic product view tracking
+7. **Logout**: Complete session cleanup
+
+### **Production Migration Path**
+```bash
+# Complex authentication system archived in:
+target/old_login/
+├── PasswordServiceInterface.java    # SHA-256 hashing
+├── PasswordServiceImpl.java         # Complex validation  
+├── AuthController.java              # MVC endpoints
+└── LoginTest.java                   # 11 comprehensive tests
+
+# To restore for production:
+# 1. Copy files back to src/
+# 2. Update UserService dependencies
+# 3. Enable complex password validation
+```
 
 ## 📋 **Suggested Next Actions**
 
@@ -231,26 +303,30 @@ mvn clean install
 
 ### **Useful URLs**
 ```bash
-# Main application
-http://localhost:8080
-
-# Authentication endpoints
-http://localhost:8080/auth/login
-http://localhost:8080/auth/register
-http://localhost:8080/auth/logout
+# REST API endpoints
+http://localhost:8080/api/users/register
+http://localhost:8080/api/users/login
+http://localhost:8080/api/users/all
 
 # Database console
 http://localhost:8080/h2-console
+
+# Legacy MVC endpoints (archived in target/old_login/)
+# http://localhost:8080/auth/login
+# http://localhost:8080/auth/register  
+# http://localhost:8080/auth/logout
 ```
 
 ## 🏗️ **Architecture Benefits**
 
 ### ✅ **Current Strengths**
-- **Clean Separation**: UserService ↔ PasswordService ↔ SessionManager
+- **Development-Optimized**: Simplified authentication for rapid prototyping
+- **Enhanced SessionManager**: Comprehensive cart, checkout, and browse history support
 - **Modern Framework**: Latest Spring Boot 3.5.6 with Java 21
-- **Secure Authentication**: SHA-256 hashing with proper verification
-- **Simple Interfaces**: Clean, focused service contracts
-- **Testable Design**: Easy to mock and unit test
+- **Flexible Architecture**: Easy to switch between development and production modes
+- **Clean REST API**: JSON-based endpoints for modern frontend integration
+- **Testable Design**: Simple authentication logic, easy to mock and test
+- **Production Ready**: Complex authentication system safely archived for future use
 
 ### 🎯 **Design Patterns Used**
 - **Dependency Injection**: Spring-managed service dependencies
@@ -352,5 +428,3 @@ If user want to delete browsing history -->
 <!-- Considering React.js for interactive login page with elements -->
 <!-- Button to forget password? Autofill?? -->
 
-
-hihi
