@@ -40,12 +40,42 @@ public class UserService implements UserServiceInterface {
     }
     
     public User registerUser(User user) {
-        // Check email uniqueness (simplified - removed username check since we use email as primary identifier)
+        // Check email uniqueness
         if (existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
         
-        // Note: Password should be already validated and encrypted before calling this method
+        // Very basic password validation for development phase
+        if (user.getPassword() == null || user.getPassword().length() < 3) {
+            throw new IllegalArgumentException("Password must be at least 3 characters long");
+        }
+        return userRepository.save(user);
+    }
+    
+    // Simple authentication method for development phase
+    public Optional<User> authenticateUser(String email, String password) {
+        Optional<User> userOpt = findByEmail(email);
+        
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+            return userOpt;
+        }
+        
+        return Optional.empty();
+    }
+    
+    // Method to change password (for development phase)
+    public User changePassword(Long userId, String newPassword) {
+        if (newPassword == null || newPassword.length() < 3) {
+            throw new IllegalArgumentException("Password must be at least 3 characters long");
+        }
+        
+        Optional<User> userOpt = findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        
+        User user = userOpt.get();
+        user.setPassword(newPassword);
         return userRepository.save(user);
     }
     
@@ -53,4 +83,3 @@ public class UserService implements UserServiceInterface {
         userRepository.save(user);
     }
 }
-

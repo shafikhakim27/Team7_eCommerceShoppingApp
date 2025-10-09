@@ -19,3 +19,5 @@ public interface UserServiceInterface {
     User registerUser(User user); // Note: expects password to be already validated and encrypted
     void saveUser(User user);
 }
+
+

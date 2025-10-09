@@ -14,18 +14,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username is mandatory.")
-    @Size(min = 2, max = 50, message = "Username must be between 2 and 50 characters.")
+    @NotBlank(message = "Username is required.")
+    @Size(min = 2, max = 50, message = "Username must be 2-50 characters.")
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Email(message = "Email should be valid.")
-    @NotBlank(message = "Email is mandatory.")
+    @Email(message = "Please enter a valid email.")
+    @NotBlank(message = "Email is required.")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Password is mandatory.")
-    @Size(min = 8, max = 255, message = "Password must be at least 8 characters.")
+    @NotBlank(message = "Password is required.")
+    @Size(min = 3, max = 255, message = "Password must be at least 3 characters.")
     @Column(nullable = false)
     private String password;
 

@@ -14,6 +14,7 @@ browse purchase history
 payment simulation
 review rate products
 admin panel */
+
 -- Start transaction
 START TRANSACTION;
 
@@ -101,13 +102,13 @@ INSERT INTO users (username, email) VALUES
 ('david', 'david@example.com'),
 ('eve', 'eve@example.com');
 
--- Insert 5 sample products
+-- Insert 5 sample products, round up to 10 cents
 INSERT INTO products (name, description, price) VALUES
-('Laptop', 'A high-performance laptop', 999.99),
-('Smartphone', 'A latest model smartphone', 699.99),    
-('Headphones', 'Noise-cancelling headphones', 199.99),
-('Smartwatch', 'A smartwatch with various features', 299.99),
-('Tablet', 'A lightweight tablet', 399.99);
+('Laptop', 'A high-performance laptop', 1000.00),
+('Smartphone', 'A latest model smartphone', 700.00),
+('Headphones', 'Noise-cancelling headphones', 200.00),
+('Smartwatch', 'A smartwatch with various features', 300.00),
+('Tablet', 'A lightweight tablet', 400.00);
 
 -- Insert 5 sample carts
 INSERT INTO carts (user_id) VALUES
@@ -287,6 +288,8 @@ INSERT INTO delivery_addresses (order_id, recipient_name, address, city, state, 
 (4, 'David Lee', '321 Serangoon Rd', 'Singapore', 'North-East', '218123', 'Singapore'),
 (5, 'Eve Ng', '654 Jurong East St', 'Singapore', 'West', '609601', 'Singapore');
 
+-- End of SQL script
+
 -- /* Indexes for performance optimization */
 -- -- Create an index on the username column for faster lookups
 -- CREATE INDEX idx_username ON users(username);
@@ -302,8 +305,6 @@ INSERT INTO delivery_addresses (order_id, recipient_name, address, city, state, 
 
 -- -- Final commit to ensure all changes are saved
 -- COMMIT;
-
--- End of SQL script
 
 
 
