@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Search Ordered Product</title>
+</head>
+
+<body>
+	<!--Header-->
+	<header id="header">
+		<h1><a herf="/">HOME</a>&nbsp;>&nbsp;<a herf="#">Purchase History</a>&nbsp;>&nbsp;Search Ordered Product</h1>
+	</header>
+	<hr>
+	
+	
+	
+	<!--Search purchased products-->
+	<form action="#" th:action="@{/purchaseHistory/product/searching}" method="GET">
+		Search ordered product:<input type="text" name="keyword" placeholder="Enter product name">
+		<input type="submit" value="search">
+		<input type="reset" value="reset">
+	</form>
+	
+	<!---->
+		<h2> Search Result</h2>
+		<h3 th:if="${#lists.isEmpty(orderItem)}"> No Results.</h3>
+		<table th:if="${not #lists.isEmpty(oerderItem)}" style="width:50%; margin-left: auto; margin-right: auto;">
+		
+	
+	<!--Purchase History Overview-->
+	<br>
+	<table style="width:95%; margin-left: auto; margin-right: auto; border: slategrey;">
+		<thead>
+			<tr>
+				<th>Product Picture</th>
+				<th>Product Name</th>
+				<th>Unit Price(at time of order)</th>
+				<th>Quantity</th>
+				<th>Total Price</th>
+				<th>Status</th>
+				<th>More</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="orderItem:${orderItem}">
+				<td th:text="${orderItem.productPicture}"></td>
+	            <td th:text="${orderItem.productName}"></td>
+	            <td th:text="${orderItem.unitPrice}"></td>
+	            <td th:text="${orderItem.quantity}"></td>
+				<td th:text="${orderItem.totalPrice}"></td>
+				<td th:text="${orderItem.status}"></td>
+	            <td><a href="#" target="_blank">refund</a>&nbsp;&nbsp;<a href="#" target="_blank">comment</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+</html>
