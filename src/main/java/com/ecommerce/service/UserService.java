@@ -45,10 +45,12 @@ public class UserService implements UserServiceInterface {
             throw new IllegalArgumentException("Email already exists");
         }
         
-        // Very basic password validation for development phase
+        // Password validation for development phase
         if (user.getPassword() == null || user.getPassword().length() < 3) {
             throw new IllegalArgumentException("Password must be at least 3 characters long");
         }
+        
+        // Save user with plain text password for development ease
         return userRepository.save(user);
     }
     

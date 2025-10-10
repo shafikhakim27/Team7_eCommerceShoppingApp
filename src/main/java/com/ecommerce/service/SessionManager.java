@@ -251,14 +251,14 @@ public class SessionManager {
         historyItem.put("productName", productName);
         historyItem.put("viewedAt", System.currentTimeMillis());
         
-        browseHistory.add(0, historyItem);
+        purchaseHistory.add(0, historyItem);
         
         // Keep only last 20 items
-        if (browseHistory.size() > 20) {
-            browseHistory = browseHistory.subList(0, 20);
+        if (purchaseHistory.size() > 20) {
+            purchaseHistory = purchaseHistory.subList(0, 20);
         }
-        
-        saveUserPreference(request, "purchaseHistory", browseHistory);
+
+        saveUserPreference(request, "purchaseHistory", purchaseHistory);
     }
     
     // Get purchase history
@@ -306,7 +306,7 @@ public class SessionManager {
             info.put("isLoggedIn", isLoggedIn(request));
             info.put("cartItemCount", getCartItemCount(request));
             info.put("cartTotal", getCartTotal(request));
-            info.put("browseHistorySize", getBrowseHistory(request).size());
+            info.put("purchaseHistorySize", getPurchaseHistory(request).size());
             
             Long lastActivity = (Long) session.getAttribute(LAST_ACTIVITY_KEY);
             if (lastActivity != null) {
