@@ -90,22 +90,38 @@
         <h1>eCommerce Dashboard</h1>
         <div class="user-info">
             <span>Welcome, <span th:text="${user.username}">User</span></span>
-            <a th:href="@{/logout}" class="logout-btn">Logout</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
     </nav>
     
     <div class="dashboard-content">
-        <!-- Success message -->
         <div th:if="${success}" class="success-message" th:text="${success}"></div>
         
         <div class="welcome-card">
-            <h2>Welcome to Your Dashboard!</h2>
-            <p>You have successfully logged in to the eCommerce application.</p>
-            <p>User ID: <span th:text="${user.userID}">123</span></p>
+            <h2>Welcome to Your Homepage!</h2>
+            <p>You have successfully logged in to the eCommerce application!</p>
+            <p>User ID: <span th:text="${user.id}">123</span></p>
             <p>Email: <span th:text="${user.email}">user@example.com</span></p>
         </div>
-        
-        <!-- Add more dashboard content here -->
+        <div class="features-section">
+            <div class="feature-card">
+                <h3>Browse Products</h3>
+                <p>Explore a wide range of products available in our store. Use the search and filter options to find exactly what you're looking for.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Manage Your Cart</h3>
+                <p>Add products to your cart and manage your selections before proceeding to checkout. View your cart at any time from the navigation bar.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Order History</h3>
+                <p>Review your past orders and track the status of current orders. Access detailed information about each purchase you've made.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Account Settings</h3>
+                <p>Update your personal information, change your password, and manage your preferences in the account settings section.</p>
+            </div>
     </div>
 </body>
 </html>

@@ -4,7 +4,6 @@ import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,72 +15,54 @@ public class UserService implements UserServiceInterface {
         this.userRepository = userRepository;
     }
     
-    // Essential user lookup methods
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public User registerUser(User user) {
+
+        User existingUserByUsername = userRepository.findByUsername(user.getUsername());
+        if (existingUserByUsername != null) {
+            throw new IllegalArgumentException("Username '" + user.getUsername() + "' already exists");
+        }
+        
+        User existingUserByEmail = userRepository.findByEmail(user.getEmail());
+        if (existingUserByEmail != null) {
+            throw new IllegalArgumentException("Email '" + user.getEmail() + "' already exists");
+        }
+        
+        return userRepository.save(user);
+    }
+
+    public User authenticateUser(String username, String password) {
+        return userRepository.findByUsernameAndPassword(username, password);
     }
     
-    public Optional<User> findByEmail(String email) {
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
     
-    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
-        return userRepository.findByEmailOrName(usernameOrEmail);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
     
-    // User existence checks
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    public User findById(Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        return userOpt.orElse(null);
     }
     
-    // User management operations
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-    
-    public User registerUser(User user) {
-        // Check email uniqueness
-        if (existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-        
-        // Password validation for development phase
-        if (user.getPassword() == null || user.getPassword().length() < 3) {
+    public boolean changePassword(String email, String newPassword) {
+        if (newPassword == null || newPassword.trim().length() < 3) {
             throw new IllegalArgumentException("Password must be at least 3 characters long");
         }
         
-        // Save user with plain text password for development ease
-        return userRepository.save(user);
-    }
-    
-    // Simple authentication method for development phase
-    public Optional<User> authenticateUser(String email, String password) {
-        Optional<User> userOpt = findByEmail(email);
-        
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
-            return userOpt;
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false; // User not found
         }
         
-        return Optional.empty();
-    }
-    
-    // Method to change password (for development phase)
-    public User changePassword(Long userId, String newPassword) {
-        if (newPassword == null || newPassword.length() < 3) {
-            throw new IllegalArgumentException("Password must be at least 3 characters long");
-        }
-        
-        Optional<User> userOpt = findById(userId);
-        if (userOpt.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        
-        User user = userOpt.get();
-        user.setPassword(newPassword);
-        return userRepository.save(user);
-    }
-    
-    public void saveUser(User user) {
+        user.setPassword(newPassword.trim());
         userRepository.save(user);
+        return true;
     }
 }

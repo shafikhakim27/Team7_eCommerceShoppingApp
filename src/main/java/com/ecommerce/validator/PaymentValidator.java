@@ -26,6 +26,6 @@ public class PaymentValidator implements Validator {
 			errors.rejectValue("expiryDate", "error.expired", "Card is expired.");
 			//this means field expiryDate has an issue, tag it with error code "error.expired" and show message "Card is expired."
 		}
-	} 
+	}
 }
 

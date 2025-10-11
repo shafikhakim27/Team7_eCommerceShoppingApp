@@ -94,11 +94,7 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
-        
+
         .register-link {
             text-align: center;
             margin-top: 1.5rem;
@@ -114,53 +110,149 @@
         .register-link a:hover {
             text-decoration: underline;
         }
+        
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .forgot-password-link a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to your account</p>
+            <h1>Welcome Back!</h1>
+            <p>Sign in to your account.</p>
         </div>
         
-        <!-- Success message -->
+        <div th:if="${error}" class="error-message" th:text="${error}" style="text-align: center; margin-bottom: 1rem;"></div>
         <div th:if="${success}" class="success-message" th:text="${success}"></div>
+        <div th:if="${param.logout}" class="success-message" style="text-align: center; margin-bottom: 1rem;">
+            You have been successfully logged out.
+        </div>
         
-        <!-- Login form -->
-        <form th:action="@{/login}" th:object="${loginRequest}" method="post">
+        <form id="loginForm" action="/login" method="post">
             <div class="form-group">
-                <label for="usernameOrEmail">Username or Email</label>
-                <input type="text" 
-                       id="usernameOrEmail" 
-                       th:field="*{usernameOrEmail}" 
-                       placeholder="Enter username or email"
-                       required>
-                <div th:if="${#fields.hasErrors('usernameOrEmail')}" 
-                     class="error-message" 
-                     th:errors="*{usernameOrEmail}"></div>
+                <label for="username">Username</label>
+                <input type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        required>
+                <div id="usernameError" class="error-message" style="display: none;"></div>
             </div>
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" 
-                       id="password" 
-                       th:field="*{password}" 
-                       placeholder="Enter password"
-                       required>
-                <div th:if="${#fields.hasErrors('password')}" 
-                     class="error-message" 
-                     th:errors="*{password}"></div>
+                <input type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required>
+                <div id="passwordError" class="error-message" style="display: none;"></div>
             </div>
             
-            <!-- General error message -->
-            <div th:if="${error}" class="error-message" th:text="${error}" style="text-align: center; margin-bottom: 1rem;"></div>
+            <div id="loginError" class="error-message" style="text-align: center; margin-bottom: 1rem; display: none;"></div>
+            <div id="loginSuccess" class="success-message" style="display: none;"></div>
             
             <button type="submit" class="login-btn">Sign In</button>
         </form>
-        
+
+        <div class="forgot-password-link">
+            <a href="/forgot-password">Forgot Password?</a>
+        </div>
+
         <div class="register-link">
-            <p>Don't have an account? <a th:href="@{/register}">Sign up here</a></p>
+            <p>Don't have an account? <a href="/register">Sign up here!</a></p>
         </div>
     </div>
+
+    <script>
+        // Enhanced login functionality with fallback
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent default form submission initially
+            
+            // Clear previous error messages
+            document.getElementById('usernameError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginSuccess').style.display = 'none';
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validate inputs
+            if (!username) {
+                document.getElementById('usernameError').textContent = 'Username is required';
+                document.getElementById('usernameError').style.display = 'block';
+                return;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            }
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+            
+            try {
+                console.log('Attempting AJAX login...');
+                
+                const response = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    console.log('Login successful:', user);
+                    document.getElementById('loginSuccess').textContent = 'Login successful! Welcome, ' + user.username;
+                    document.getElementById('loginSuccess').style.display = 'block';
+                    
+                    // Redirect to dashboard after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    const errorMessage = await response.text();
+                    console.log('Login failed:', errorMessage);
+                    document.getElementById('loginError').textContent = errorMessage || 'Login failed. Please try again.';
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('AJAX login failed, falling back to form submission:', error);
+                
+                // Fallback: Use traditional form submission
+                submitBtn.textContent = 'Redirecting...';
+                
+                // Remove the event listener and submit the form normally
+                this.removeEventListener('submit', arguments.callee);
+                this.submit();
+                return;
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

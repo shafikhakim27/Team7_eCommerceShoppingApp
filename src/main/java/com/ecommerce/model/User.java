@@ -4,20 +4,22 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-
-public class User {
+public class User implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Username is required.")
-    @Size(min = 2, max = 50, message = "Username must be 2-50 characters.")
+    @Size(min = 5, max = 50, message = "Username must be 5-50 characters.")
     @Column(nullable = false, unique = true)
-    private String name;
+    private String username;
 
     @Email(message = "Please enter a valid email.")
     @NotBlank(message = "Email is required.")
@@ -25,21 +27,18 @@ public class User {
     private String email;
 
     @NotBlank(message = "Password is required.")
-    @Size(min = 3, max = 255, message = "Password must be at least 3 characters.")
+    @Size(min = 5, max = 50, message = "Password must be between 5-50 characters.")
     @Column(nullable = false)
     private String password;
 
-    // Default Constructor
     public User() {}
-    
-    // Constructor with required fields
-    public User(String name, String email, String password) {
-        this.name = name;
+
+    public User(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }
     
-    // Getter and Setter methods
     public Long getId() {
         return id;
     }
@@ -48,12 +47,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -72,26 +71,13 @@ public class User {
         this.password = password;
     }
     
-    // Utility methods
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                '}'; // Don't include password in toString for security
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        User user = (User) obj;
-        return id != null && id.equals(user.id);
-    }
-    
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+                ", password='" + password + '\'' +
+                '}';
     }
 }

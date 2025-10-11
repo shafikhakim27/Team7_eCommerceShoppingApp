@@ -65,12 +65,18 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <version>3.0.2</version>
         </dependency>
 
-        <!-- H2 Database for development/testing -->
+        <!-- Hibernate Validator (Implementation for Jakarta Validation) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- H2 Database for development/testing
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency>
+        </dependency> -->
 
         <!-- MySQL Database Driver -->
         <dependency>
@@ -83,6 +89,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- Spring Session JDBC for persistent sessions -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-jdbc</artifactId>
         </dependency>
 
         <!-- Spring Boot Starter Test -->

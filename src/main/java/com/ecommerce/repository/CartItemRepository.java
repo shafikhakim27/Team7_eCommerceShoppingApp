@@ -11,12 +11,12 @@ import org.springframework.data.repository.query.Param;
 import com.ecommerce.model.CartItem;
 
 //Goh Ching Tard
-public interface CartItemRepository extends JpaRepository<CartItem, Long> { 
+public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
-	@Query("Select c from CartItem c where c.cart.customer.id = :customerId") 
-	public ArrayList<CartItem> ShowItemsInCart(@Param("customerId") Long customerId); 
+	@Query("Select c from CartItem c where c.cart.customer.id = :customerId")
+	public ArrayList<CartItem> ShowItemsInCart(@Param("customerId") Long customerId);
 
-	@Query("Select c from CartItem c where c.product.id = :productId and c.cart.id = :cartId") 
-	public CartItem checkItemInCart(@Param("productId") Long productId, 
-			@Param("cartId") Long cartId); 
+	@Query("Select c from CartItem c where c.product.id = :productId and c.cart.id = :cartId")
+	public CartItem checkItemInCart(@Param("productId") Long productId,
+			@Param("cartId") Long cartId);
 }

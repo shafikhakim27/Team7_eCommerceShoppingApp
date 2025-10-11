@@ -18,22 +18,17 @@ public class SessionManager {
     private static final String LAST_ACTIVITY_KEY = "lastActivity";
     private static final String USER_PREFERENCES_KEY = "userPreferences";
     
-    // Session timeout in milliseconds (30 minutes)
     private static final long SESSION_TIMEOUT = 30 * 60 * 1000;
 
-    // ========== AUTHENTICATION METHODS ==========
-    
-    // login and create user session
+
     public void login(User user, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.setAttribute(USER_SESSION_KEY, user);
+        session.setAttribute(USER_SESSION_KEY, user.getUsername());
         session.setAttribute(LAST_ACTIVITY_KEY, System.currentTimeMillis());
-        
-        // Initialize user-specific session data
+
         initializeUserSession(session);
     }
     
-    // get current user
     public User getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null && isSessionValid(session)) {
@@ -43,12 +38,10 @@ public class SessionManager {
         return null;
     }
 
-    // check if user is logged in
     public boolean isLoggedIn(HttpServletRequest request) {
         return getCurrentUser(request) != null;
     }
     
-    // logout and invalidate session
     public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -56,9 +49,6 @@ public class SessionManager {
         }
     }
 
-    // ========== CART MANAGEMENT METHODS ==========
-    
-    // Get user's shopping cart from session
     @SuppressWarnings("unchecked")
     public Map<String, Object> getShoppingCart(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -70,7 +60,6 @@ public class SessionManager {
         return new HashMap<>();
     }
     
-    // Add item to cart
     public void addToCart(HttpServletRequest request, Long productId, String productName, Double price, Integer quantity) {
         if (!isLoggedIn(request)) {
             throw new IllegalStateException("User must be logged in to add items to cart");
@@ -79,7 +68,7 @@ public class SessionManager {
         HttpSession session = request.getSession();
         Map<String, Object> cart = getShoppingCart(request);
         
-        // Create cart item
+
         Map<String, Object> cartItem = new HashMap<>();
         cartItem.put("productId", productId);
         cartItem.put("productName", productName);
@@ -88,13 +77,12 @@ public class SessionManager {
         cartItem.put("subtotal", price * quantity);
         cartItem.put("addedAt", System.currentTimeMillis());
         
-        // Add to cart (use productId as key)
+
         cart.put(productId.toString(), cartItem);
         session.setAttribute(CART_SESSION_KEY, cart);
         updateLastActivity(session);
     }
     
-    // Update cart item quantity
     public void updateCartItemQuantity(HttpServletRequest request, Long productId, Integer newQuantity) {
         if (!isLoggedIn(request)) {
             throw new IllegalStateException("User must be logged in to update cart");
@@ -117,7 +105,6 @@ public class SessionManager {
         }
     }
     
-    // Remove item from cart
     public void removeFromCart(HttpServletRequest request, Long productId) {
         if (!isLoggedIn(request)) {
             throw new IllegalStateException("User must be logged in to modify cart");
@@ -131,7 +118,6 @@ public class SessionManager {
         updateLastActivity(session);
     }
     
-    // Clear entire cart
     public void clearCart(HttpServletRequest request) {
         if (!isLoggedIn(request)) {
             throw new IllegalStateException("User must be logged in to clear cart");
@@ -141,8 +127,7 @@ public class SessionManager {
         session.setAttribute(CART_SESSION_KEY, new HashMap<String, Object>());
         updateLastActivity(session);
     }
-    
-    // Get cart total
+
     public Double getCartTotal(HttpServletRequest request) {
         Map<String, Object> cart = getShoppingCart(request);
         return cart.values().stream()
@@ -154,7 +139,7 @@ public class SessionManager {
                 .sum();
     }
     
-    // Get cart item count
+
     public Integer getCartItemCount(HttpServletRequest request) {
         Map<String, Object> cart = getShoppingCart(request);
         return cart.values().stream()
@@ -166,9 +151,7 @@ public class SessionManager {
                 .sum();
     }
 
-    // ========== CHECKOUT METHODS ==========
-    
-    // Save checkout data to session
+
     public void saveCheckoutData(HttpServletRequest request, Map<String, Object> checkoutData) {
         if (!isLoggedIn(request)) {
             throw new IllegalStateException("User must be logged in for checkout");
@@ -179,7 +162,7 @@ public class SessionManager {
         updateLastActivity(session);
     }
     
-    // Get checkout data from session
+
     @SuppressWarnings("unchecked")
     public Map<String, Object> getCheckoutData(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -191,7 +174,7 @@ public class SessionManager {
         return new HashMap<>();
     }
     
-    // Clear checkout data after successful order
+
     public void clearCheckoutData(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -200,12 +183,10 @@ public class SessionManager {
         }
     }
 
-    // ========== USER PREFERENCES METHODS ==========
-    
-    // Save user preferences (for purchase history, favorites, etc.)
+
     public void saveUserPreference(HttpServletRequest request, String key, Object value) {
         if (!isLoggedIn(request)) {
-            return; // Silent fail for preferences
+            return;
         }
         
         HttpSession session = request.getSession();
@@ -220,7 +201,6 @@ public class SessionManager {
         updateLastActivity(session);
     }
     
-    // Get user preference
     public Object getUserPreference(HttpServletRequest request, String key) {
         HttpSession session = request.getSession(false);
         if (session != null && isSessionValid(session)) {
@@ -234,7 +214,6 @@ public class SessionManager {
         return null;
     }
     
-    // Add to purchase history
     public void addToPurchaseHistory(HttpServletRequest request, Long productId, String productName) {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> purchaseHistory = (List<Map<String, Object>>) getUserPreference(request, "purchaseHistory");
@@ -242,10 +221,8 @@ public class SessionManager {
             purchaseHistory = new ArrayList<>();
         }
         
-        // Remove if already exists to avoid duplicates
         purchaseHistory.removeIf(item -> item.get("productId").equals(productId));
 
-        // Add to beginning of list
         Map<String, Object> historyItem = new HashMap<>();
         historyItem.put("productId", productId);
         historyItem.put("productName", productName);
@@ -253,7 +230,6 @@ public class SessionManager {
         
         purchaseHistory.add(0, historyItem);
         
-        // Keep only last 20 items
         if (purchaseHistory.size() > 20) {
             purchaseHistory = purchaseHistory.subList(0, 20);
         }
@@ -261,16 +237,13 @@ public class SessionManager {
         saveUserPreference(request, "purchaseHistory", purchaseHistory);
     }
     
-    // Get purchase history
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getPurchaseHistory(HttpServletRequest request) {
         List<Map<String, Object>> history = (List<Map<String, Object>>) getUserPreference(request, "purchaseHistory");
         return history != null ? history : new ArrayList<>();
     }
 
-    // ========== UTILITY METHODS ==========
-    
-    // Initialize session data for new user
+
     private void initializeUserSession(HttpSession session) {
         if (session.getAttribute(CART_SESSION_KEY) == null) {
             session.setAttribute(CART_SESSION_KEY, new HashMap<String, Object>());
@@ -280,7 +253,6 @@ public class SessionManager {
         }
     }
     
-    // Check if session is still valid (not timed out)
     private boolean isSessionValid(HttpSession session) {
         Long lastActivity = (Long) session.getAttribute(LAST_ACTIVITY_KEY);
         if (lastActivity == null) {
@@ -291,12 +263,10 @@ public class SessionManager {
         return (currentTime - lastActivity) < SESSION_TIMEOUT;
     }
     
-    // Update last activity timestamp
     private void updateLastActivity(HttpSession session) {
         session.setAttribute(LAST_ACTIVITY_KEY, System.currentTimeMillis());
     }
-    
-    // Get session info for debugging
+
     public Map<String, Object> getSessionInfo(HttpServletRequest request) {
         Map<String, Object> info = new HashMap<>();
         HttpSession session = request.getSession(false);

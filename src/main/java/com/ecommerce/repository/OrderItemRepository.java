@@ -12,11 +12,9 @@ import com.ecommerce.model.OrderItem;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
-	//search by name 
-	@Query("Select p from OrderItem as p where p.name like CONCAT('%',:k,'%') ") 
+	//search by name
+	@Query("Select p from OrderItem as p where p.name like CONCAT('%',:k,'%') ")
 	public ArrayList<OrderItem> SearchOrderItemByName(@Param("k") String keyword);
 
 	public List<OrderItem> findByOrderID(Long id);
-	 
-
 }
