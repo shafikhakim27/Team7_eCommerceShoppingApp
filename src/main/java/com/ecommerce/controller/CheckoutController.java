@@ -57,14 +57,11 @@ public class CheckoutController {
 	@Autowired
 	private OrderService orderService;
 	
-	// @Autowired
-	// private PaymentService paymentService; //for processing/validation of payment
+	@Autowired
+	private PaymentService paymentService; //for processing/validation of payment
 	
 	@Autowired
 	private CustomerService customerService;
-	
-	// @Autowired
-	// private PaymentValidator paymentValidator;
 	
 	@Autowired
 	private OrderRepository orderRepository;
@@ -75,10 +72,11 @@ public class CheckoutController {
 	// 	return new Payment();
 	// }
 	
-	@InitBinder("paymentForm") //validator to bind to paymentForm only
-	private void initPaymentBinder (WebDataBinder binder) {
-		binder.addValidators(paymentValidator);
-	}
+	// Payment form uses @Valid annotation for validation instead of custom validator
+	// @InitBinder("paymentForm") 
+	// private void initPaymentBinder (WebDataBinder binder) {
+	// 	binder.addValidators(paymentValidator);
+	// }
 	
 	@GetMapping("/payment-details")
 	public String showPaymentDetails(Model model, HttpSession session) {
