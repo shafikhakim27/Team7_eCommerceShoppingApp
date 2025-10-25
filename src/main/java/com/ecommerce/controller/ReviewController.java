@@ -1,12 +1,5 @@
-// package sg.nus.iss.shoppingCart.controller;
-
 package com.ecommerce.controller;
 
-// import sg.nus.iss.shoppingCart.dto.ReviewForm;
-// import org.springframework.validation.BindingResult;
-// import sg.nus.iss.shoppingCart.model.Product;
-// import sg.nus.iss.shoppingCart.model.Customer;
-// import sg.nus.iss.shoppingCart.service.ShoppingService;
 
 import com.ecommerce.dto.ReviewForm;
 import org.springframework.validation.BindingResult;
@@ -26,29 +19,29 @@ import java.util.NoSuchElementException;
 public class ReviewController {
 
     @Autowired
-    private ShoppingService shoppingService; 
+    private ShoppingService shoppingService;
 
     @GetMapping("/product/{productId}")
     public String showProductReviews(@PathVariable Long productId, Model model) {
-        Product product = shoppingService.getProductById(productId); 
+        Product product = shoppingService.getProductById(productId);
         ReviewForm reviewForm = new ReviewForm();
         reviewForm.setProductId(productId);
         model.addAttribute("product", product);
-        model.addAttribute("reviews", shoppingService.getReviewsByProductId(productId)); 
+        model.addAttribute("reviews", shoppingService.getReviewsByProductId(productId));
         model.addAttribute("reviewForm", reviewForm);
         return "review-view";
     }
 
     @PostMapping("/submit")
     public String submitReview(@Valid @ModelAttribute ReviewForm reviewForm, BindingResult bindingResult, Model model) {
-        Product product = shoppingService.getProductById(reviewForm.getProductId()); 
+        Product product = shoppingService.getProductById(reviewForm.getProductId());
         model.addAttribute("productId", reviewForm.getProductId());
         if (bindingResult.hasErrors()) {
             return "review-failure";
         }
         try {
         	Customer customer = shoppingService.getCustomerById(reviewForm.getCustomerId());
-            shoppingService.saveReview(reviewForm.getRating(), reviewForm.getComment(), product, customer); 
+            shoppingService.saveReview(reviewForm.getRating(), reviewForm.getComment(), product, customer);
             return "redirect:/reviews/success";
         } catch (NoSuchElementException e) {
             return "review-failure";

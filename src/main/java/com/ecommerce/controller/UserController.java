@@ -3,14 +3,27 @@ package com.ecommerce.controller;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserService;
 import com.ecommerce.service.SessionManager;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * UserController - Optimized controller for User operations
+ * Lean baseline development with proper error handling and REST endpoints
+ */
 @Controller
+@RequestMapping
 public class UserController {
     
     @Autowired
@@ -19,83 +32,153 @@ public class UserController {
     @Autowired
     private SessionManager sessionManager;
     
-    @PostMapping("/api/users/register")
-    @ResponseBody
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        try {
-            User registeredUser = userService.registerUser(user);
-            registeredUser.setPassword(null);
-            return ResponseEntity.ok(registeredUser);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // ===== WEB PAGE ENDPOINTS =====
+    
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
     }
-
+    
+    @GetMapping("/login")
+    public String loginPage(Model model) {
+        model.addAttribute("user", new User());
+        return "login";
+    }
+    
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+    
+    @GetMapping("/forgot-password")
+    public String forgotPasswordPage(Model model) {
+        return "forgot-password";
+    }
+    
+    @GetMapping("/dashboard")
+    public String dashboard(HttpServletRequest request, Model model) {
+        User currentUser = sessionManager.getCurrentUser(request);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        
+        model.addAttribute("user", currentUser);
+        model.addAttribute("sessionInfo", sessionManager.getSessionInfo(request));
+        return "dashboard";
+    }
+    
+    // ===== FORM PROCESSING ENDPOINTS =====
+    
     @PostMapping("/login")
-    public String loginForm(@RequestParam String username, @RequestParam String password,
-                            HttpServletRequest request, Model model) {
-        User user = userService.authenticateUser(username, password);
-        if (user != null) {
-            // Use SessionManager for enhanced session management
-            sessionManager.login(user, request);
-            return "redirect:/dashboard";
-        } else {
-            model.addAttribute("error", "Invalid username or password");
+    public String processLogin(@RequestParam String username, 
+                              @RequestParam String password,
+                              HttpServletRequest request, 
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                model.addAttribute("error", "Username is required");
+                return "login";
+            }
+            if (password == null || password.trim().isEmpty()) {
+                model.addAttribute("error", "Password is required");
+                return "login";
+            }
+            
+            User user = userService.authenticateUser(username.trim(), password);
+            if (user != null) {
+                sessionManager.login(user, request);
+                redirectAttributes.addFlashAttribute("success", "Welcome back, " + user.getUsername() + "!");
+                return "redirect:/dashboard";
+            } else {
+                model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
+                return "login";
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Login failed. Please try again.");
             return "login";
         }
     }
-
-    @PostMapping("/api/users/login")
-    @ResponseBody
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        User userOpt = userService.authenticateUser(
-            loginRequest.getUsername(),
-            loginRequest.getPassword()
-        );
-        if (userOpt != null) {
-            // Use SessionManager for enhanced session management
-            sessionManager.login(userOpt, request);
-            userOpt.setPassword(null);
-            return ResponseEntity.ok(userOpt);
-        } else {
-            return ResponseEntity.badRequest().body("Invalid username or password");
-        }
-    }
-
-    public static class LoginRequest {
-        private String username;
-        private String password;
-
-        // Getters and setters
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
-    }
-
-    public static class PasswordChangeRequest {
-        private String email;
-        private String newPassword;
-
-        // Getters and setters
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-        public String getNewPassword() { return newPassword; }
-        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
-    }
-
-    @PostMapping("/api/users/forgot-password")
-    @ResponseBody
-    public ResponseEntity<?> forgotPassword(@RequestBody PasswordChangeRequest request) {
+    
+    @PostMapping("/register")
+    public String processRegistration(@Valid @ModelAttribute User user,
+                                    BindingResult bindingResult,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
         try {
-            // First check if user exists
-            User user = userService.findByEmail(request.getEmail());
-            if (user == null) {
-                return ResponseEntity.badRequest().body("No account found with this email address");
+            if (bindingResult.hasErrors()) {
+                return "register";
             }
             
-            // Change the password
-            boolean success = userService.changePassword(request.getEmail(), request.getNewPassword());
+            User registeredUser = userService.registerUser(user);
+            redirectAttributes.addFlashAttribute("success", "Registration successful! Please login.");
+            return "redirect:/login";
+            
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "register";
+        } catch (Exception e) {
+            model.addAttribute("error", "Registration failed. Please try again.");
+            return "register";
+        }
+    }
+    
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam String email,
+                                      @RequestParam String newPassword,
+                                      Model model,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            if (email == null || email.trim().isEmpty()) {
+                model.addAttribute("error", "Email is required");
+                return "forgot-password";
+            }
+            if (newPassword == null || newPassword.length() < 6) {
+                model.addAttribute("error", "Password must be at least 6 characters");
+                return "forgot-password";
+            }
+            
+            boolean success = userService.changePassword(email.trim(), newPassword);
+            if (success) {
+                redirectAttributes.addFlashAttribute("success", "Password updated successfully! Please login with your new password.");
+                return "redirect:/login";
+            } else {
+                model.addAttribute("error", "No account found with this email address");
+                model.addAttribute("email", email);
+                return "forgot-password";
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "forgot-password";
+        }
+    }
+    
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        sessionManager.logout(request);
+        redirectAttributes.addFlashAttribute("success", "You have been logged out successfully");
+        return "redirect:/login";
+    }
+
+    @PostMapping("/change-password")
+    @ResponseBody
+    public ResponseEntity<String> changePassword(@RequestParam String currentPassword,
+                                                  @RequestParam String newPassword,
+                                                  @RequestParam String confirmPassword,
+                                                  HttpServletRequest request) {
+        try {
+            if (!newPassword.equals(confirmPassword)) {
+                return ResponseEntity.badRequest().body("New passwords do not match");
+            }
+            
+            User currentUser = sessionManager.getCurrentUser(request);
+            if (currentUser == null) {
+                return ResponseEntity.badRequest().body("User not logged in");
+            }
+            
+            boolean success = userService.changePassword(currentUser.getEmail(), newPassword);
             if (success) {
                 return ResponseEntity.ok("Password updated successfully");
             } else {
@@ -138,11 +221,6 @@ public class UserController {
             return "dashboard";
         }
         
-        return "redirect:/login";
-    }
-
-    @GetMapping("/")
-    public String home() {
         return "redirect:/login";
     }
 

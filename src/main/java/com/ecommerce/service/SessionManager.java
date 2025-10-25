@@ -28,6 +28,8 @@ public class SessionManager {
     private static final String LAST_ACTIVITY_KEY = "lastActivity";
     private static final String SESSION_START_TIME_KEY = "sessionStartTime";
     private static final String LOGIN_TIME_KEY = "loginTime";
+    private static final String CHECKOUT_DATA_KEY = "checkoutData";
+    private static final String USER_PREFERENCES_KEY = "userPreferences";
     
     // Session Configuration
     private static final long SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
@@ -363,10 +365,6 @@ public class SessionManager {
     private void updateLastActivity(HttpSession session) {
         session.setAttribute(LAST_ACTIVITY_KEY, System.currentTimeMillis());
     }
-}
-                .sum();
-    }
-
 
     public void saveCheckoutData(HttpServletRequest request, Map<String, Object> checkoutData) {
         if (!isLoggedIn(request)) {
@@ -378,7 +376,6 @@ public class SessionManager {
         updateLastActivity(session);
     }
     
-
     @SuppressWarnings("unchecked")
     public Map<String, Object> getCheckoutData(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -390,7 +387,6 @@ public class SessionManager {
         return new HashMap<>();
     }
     
-
     public void clearCheckoutData(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -458,52 +454,4 @@ public class SessionManager {
         List<Map<String, Object>> history = (List<Map<String, Object>>) getUserPreference(request, "purchaseHistory");
         return history != null ? history : new ArrayList<>();
     }
-
-
-    private void initializeUserSession(HttpSession session) {
-        if (session.getAttribute(CART_SESSION_KEY) == null) {
-            session.setAttribute(CART_SESSION_KEY, new HashMap<String, Object>());
-        }
-        if (session.getAttribute(USER_PREFERENCES_KEY) == null) {
-            session.setAttribute(USER_PREFERENCES_KEY, new HashMap<String, Object>());
-        }
-    }
-    
-    private boolean isSessionValid(HttpSession session) {
-        Long lastActivity = (Long) session.getAttribute(LAST_ACTIVITY_KEY);
-        if (lastActivity == null) {
-            return false;
-        }
-        
-        long currentTime = System.currentTimeMillis();
-        return (currentTime - lastActivity) < SESSION_TIMEOUT;
-    }
-    
-    private void updateLastActivity(HttpSession session) {
-        session.setAttribute(LAST_ACTIVITY_KEY, System.currentTimeMillis());
-    }
-
-    public Map<String, Object> getSessionInfo(HttpServletRequest request) {
-        Map<String, Object> info = new HashMap<>();
-        HttpSession session = request.getSession(false);
-        
-        if (session != null) {
-            info.put("sessionId", session.getId());
-            info.put("isLoggedIn", isLoggedIn(request));
-            info.put("cartItemCount", getCartItemCount(request));
-            info.put("cartTotal", getCartTotal(request));
-            info.put("purchaseHistorySize", getPurchaseHistory(request).size());
-            
-            Long lastActivity = (Long) session.getAttribute(LAST_ACTIVITY_KEY);
-            if (lastActivity != null) {
-                info.put("lastActivity", lastActivity);
-                info.put("sessionValid", isSessionValid(session));
-            }
-        } else {
-            info.put("sessionExists", false);
-        }
-        
-        return info;
-    }
 }
-

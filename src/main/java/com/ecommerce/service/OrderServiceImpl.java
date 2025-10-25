@@ -1,4 +1,3 @@
-// package sg.edu.nus.caproject.service;
 package com.ecommerce.service;
 
 import java.time.LocalDateTime;
@@ -9,15 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// import sg.edu.nus.caproject.model.Cart;
-// import sg.edu.nus.caproject.model.CartItem;
-// import sg.edu.nus.caproject.model.Customer;
-// import sg.edu.nus.caproject.model.Order;
-// import sg.edu.nus.caproject.model.OrderItem;
-// import sg.edu.nus.caproject.repository.CartRepository;
-// import sg.edu.nus.caproject.repository.OrderRepository;
-
-import com.ecommerce.model.Cart;
+import com.ecommerce.model.CartItem;
+import com.ecommerce.model.User;
+import com.ecommerce.model.Order;
+import com.ecommerce.model.OrderItem;
+import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.model.CartItem;
 import com.ecommerce.model.Customer;
 import com.ecommerce.model.Order;
@@ -40,16 +35,16 @@ public class OrderServiceImpl implements OrderService{
 	private CartService cartService; //for reuse of total calculation
 	
 	@Override
-	public Order createOrder(List<CartItem> cartItems, Customer customer){
+	public Order createOrder(List<CartItem> cartItems, User user){
 		
 		//create order
 		Order order = new Order();
-		order.setCustomer(customer);
+		order.setUser(user);
 		order.setOrderDate(LocalDateTime.now());
 		
 		//to store cart items as order products (for retrieval of order history)
 		List<OrderItem> orderItems = cartItems.stream()
-												.map(cartItem -> new OrderItem(order, cartItem.getProduct(), cartItem.getQuantity(), cartItem.getProduct().getPrice()))
+												.map(cartItem -> new OrderItem(order, cartItem.getProduct(), cartItem.getQuantity(), cartItem.getProduct().getPrice().doubleValue()))
 												.collect(Collectors.toList());
 		
 		order.setOrderItems(orderItems);

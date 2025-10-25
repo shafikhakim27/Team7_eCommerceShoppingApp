@@ -13,5 +13,5 @@ public interface ProductInterface {
 	public List<Product> retrieveProducts();
 	public Product findProductById(Long id);
 	public void deleteProduct(Product product);
+	List<Product> getFeaturedProducts(int limit);
 }
-

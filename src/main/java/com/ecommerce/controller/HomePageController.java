@@ -1,8 +1,5 @@
-// package sg.nus.iss.shoppingCart.controller;
 package com.ecommerce.controller;
 
-
-// import sg.nus.iss.shoppingCart.interfacemethods.ProductInterface;
 import com.ecommerce.service.ProductInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
