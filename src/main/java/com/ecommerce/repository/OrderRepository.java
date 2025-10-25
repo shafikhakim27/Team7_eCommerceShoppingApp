@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ecommerce.model.Order;
 
 public interface OrderRepository extends JpaRepository <Order, Long> {
-	//auto-generate SQL, return customerID匹配的所有Order
+	//return all Orders matching customerID 
 	List<Order> findByCustomerId(Long customerId);
 
 }
